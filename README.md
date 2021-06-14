@@ -8,7 +8,7 @@ Collection of Ansible roles and playbooks crafted for Seldon ecosystem
 To install Ansible and its requirements:
 ```bash
 pip install ansible openshift
-ansible-galaxy collection install git+https://github.com/SeldonIO/ansible-k8s-collections.git
+ansible-galaxy collection install git+https://github.com/SeldonIO/ansible-k8s-collection.git
 ```
 
 ## Playbooks
