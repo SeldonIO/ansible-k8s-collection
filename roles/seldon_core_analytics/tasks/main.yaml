@@ -1,0 +1,15 @@
+---
+- name: "Create a {{ seldon_system_namespace }} namespaces"
+  community.kubernetes.k8s:
+    name: "{{ seldon_system_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Install Seldon Core Analytics
+  community.kubernetes.helm:
+    name: seldon-core-analytics
+    release_namespace: "{{ seldon_system_namespace }}"
+    chart_repo_url: "https://storage.googleapis.com/seldon-charts"
+    chart_ref: "seldon-core-analytics"
+    values: "{{ seldon_core_analytics_values }}"
