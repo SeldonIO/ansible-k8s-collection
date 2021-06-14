@@ -1,0 +1,95 @@
+---
+- name: "Create a k8s namespaces: {{ gitea_namespace }}"
+  community.kubernetes.k8s:
+    name: "{{ gitea_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Install Gitea Server
+  community.kubernetes.helm:
+    name: gitea
+    release_namespace: "{{ gitea_namespace }}"
+    chart_repo_url: "https://dl.gitea.io/charts/"
+    chart_ref: "gitea"
+    chart_version: "{{ gitea_version }}"
+    values: "{{ gitea_values }}"
+    values_files: "{{ gitea_values_files }}"
+
+
+- name: Wait for Gitea pods
+  community.kubernetes.k8s_info:
+    kind: Pod
+    name: "{{ item }}"
+    namespace: "{{ gitea_namespace }}"
+    wait: yes
+    wait_timeout: 600
+    wait_condition:
+      type: Ready
+      status: "True"
+  with_items:
+    - gitea-0
+    - gitea-postgresql-0
+  when: gitea_wait_for_deployments | bool
+
+
+- name: Wait for Gitea deployments (memcached)
+  community.kubernetes.k8s_info:
+    kind: Deployment
+    name: "{{ item }}"
+    namespace: "{{ gitea_namespace }}"
+    wait: yes
+    wait_timeout: 600
+    wait_condition:
+      type: Available
+      status: "True"
+      reason: MinimumReplicasAvailable
+  with_items:
+    - gitea-memcached
+
+
+- name: Get an existing Service object
+  community.kubernetes.k8s_info:
+    api_version: v1
+    kind: Service
+    name: gitea-http
+    namespace: gitea-system
+  register: web_service
+
+
+- name: "Set fact about Gitea External IP"
+  set_fact:
+    gitea_external_ip: "{{ web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+
+
+- name: Debug message
+  ansible.builtin.debug:
+    var: gitea_external_ip
+
+
+- name: "Check if {{ gitops_repo_name }} exist"
+  uri:
+    url: "http://{{ gitea_external_ip }}:{{ gitea_port }}/api/v1/repos/{{ gitops_user }}/{{ gitops_repo_name }}"
+    user: "{{ gitops_user }}"
+    password: "{{ gitops_password }}"
+    method: GET
+    force_basic_auth: yes
+    status_code:
+      - 200
+      - 404
+  register: repo_data
+
+
+- name: "Create {{ gitops_repo_name }} repository if it does not exist"
+  uri:
+    url: "http://{{ gitea_external_ip }}:{{ gitea_port }}/api/v1/user/repos"
+    user: "{{ gitops_user }}"
+    password: "{{ gitops_password }}"
+    body:
+      auto_init: true
+      name: "{{ gitops_repo_name }}"
+    body_format: json
+    method: POST
+    force_basic_auth: yes
+    status_code: 201
+  when: repo_data.status == 404

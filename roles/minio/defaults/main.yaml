@@ -1,0 +1,10 @@
+---
+minio_namespace: minio-system
+minio_access_key: minioadmin
+minio_secret_key: minioadmin
+
+minio_secret_namespaces: []
+minio_rclone_secret_name: seldon-rclone-secret
+minio_kfserving_secret_name: null
+
+minio_service_type: ClusterIP

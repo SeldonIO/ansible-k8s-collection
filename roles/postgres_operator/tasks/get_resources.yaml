@@ -1,0 +1,6 @@
+---
+- name: "Git clone {{postgres_operator_repo}} repo and checkout {{ postgres_operator_version }}"
+  ansible.builtin.git:
+    version: "{{ postgres_operator_version }}"
+    repo: "{{ postgres_operator_repo }}"
+    dest: "{{ inventory_dir }}/.resources/postgres-operator"

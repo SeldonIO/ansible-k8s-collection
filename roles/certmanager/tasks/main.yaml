@@ -1,0 +1,24 @@
+---
+- name: Install Certmanager
+  community.kubernetes.k8s:
+    state: present
+    definition: "{{ lookup('url', item, split_lines=False) }}"
+  with_items:
+    - "{{ certmanager_yaml }}"
+
+- name: Wait for cert-manager pods become ready
+  community.kubernetes.k8s_info:
+    kind: Deployment
+    name: "{{ item }}"
+    namespace: cert-manager
+    wait: yes
+    wait_timeout: 600
+    wait_condition:
+      type: Available
+      status: "True"
+      reason: MinimumReplicasAvailable
+  with_items:
+    - cert-manager
+    - cert-manager-cainjector
+    - cert-manager-webhook
+  when: certmanager_wait_for_deployments | bool

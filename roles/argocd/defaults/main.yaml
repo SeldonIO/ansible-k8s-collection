@@ -1,0 +1,18 @@
+---
+argocd_namespace: argocd
+argocd_version: null
+
+argocd_wait_for_deployments: true
+
+argocd_values: {}
+argocd_values_files: []
+
+gitops_repository: ""
+gitops_namespaces: []
+
+argocd_create_virtualservice: true
+argocd_virtualservice_gateway: "istio-system/seldon-gateway"
+argocd_virtualservice_prefix: "/argocd/"
+
+seldon_system_namespace: seldon-system
+seldon_deploy_git_creds_secret_name: git-creds

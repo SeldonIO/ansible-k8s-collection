@@ -1,0 +1,11 @@
+---
+iter8_namespace: iter8-system
+iter8_version: master
+
+# Source repository with Seldon Core code, useful if one would like to install from a fork
+iter8_repo: https://github.com/iter8-tools/iter8.git
+
+iter8_values: {}
+iter8_values_files: []
+
+iter8_wait_for_deployments: true

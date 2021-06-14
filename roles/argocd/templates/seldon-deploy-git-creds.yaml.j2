@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ seldon_deploy_git_creds_secret_name }}"
+  namespace: "{{ seldon_system_namespace }}"
+type: Opaque
+stringData:
+   username: "{{ gitops_user }}"
+   email: "{{ gitops_email }}"
+   token: "{{ gitops_password }}"

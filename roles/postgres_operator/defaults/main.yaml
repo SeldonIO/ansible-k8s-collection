@@ -1,0 +1,9 @@
+---
+postgres_operator_namespace: postgres
+
+postgres_operator_repo: https://github.com/zalando/postgres-operator.git
+postgres_operator_version: v1.6.1
+postgres_operator_wait_for_deployments: true
+
+postgres_operator_values: {}
+postgres_operator_values_files: []

@@ -1,0 +1,18 @@
+namespace: "seldonio"
+name: "k8s"
+version: "0.1.0"
+readme: "README.md"
+authors:
+    - "Seldon Technologies Ltd. <hello@seldon.io>"
+dependencies:
+    "community.kubernetes": "*"
+    "community.docker": "*"
+license:
+    - "Apache 2.0"
+tags:
+    - seldon
+    - kubernetes
+    - ecosystem
+repository: "https://www.github.com/seldonio/ansible-tools"
+build_ignore:
+    - .resources

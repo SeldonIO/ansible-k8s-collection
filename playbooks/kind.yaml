@@ -1,0 +1,10 @@
+---
+- name: Create Kind Cluster
+  hosts: localhost
+  roles:
+    - kind
+    - metallb
+  vars:
+    kind_cluster_name: ansible
+    kind_image_version: kindest/node:v1.18.15
+    kind_kubectl_default_namespace: seldon

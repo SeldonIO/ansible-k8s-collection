@@ -1,0 +1,26 @@
+---
+- name: Install Seldon Core
+  hosts: localhost
+  roles:
+    - istio
+    - minio
+    - seldon_core
+  vars:
+    istio_version: 1.7.6
+
+    # Verify Install does not work with 1.7.x on k8s 1.18.x
+    istio_verify_install: false
+
+    seldon_core_version: v1.8.0
+
+    seldon_core_values:
+      istio:
+        enabled: true
+        gateway: "seldon-gateway.istio-system.svc.cluster.local"
+
+    seldon_namespaces:
+      - default
+      - seldon
+      - production
+
+    minio_service_type: LoadBalancer

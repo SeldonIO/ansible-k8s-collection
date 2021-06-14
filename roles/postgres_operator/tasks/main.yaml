@@ -1,0 +1,9 @@
+---
+- name: Create Namespaces
+  include: namespaces.yaml
+
+- name: Download Resources
+  include: get_resources.yaml
+
+- name: Install Postgres Operator
+  include: install_postgres_operator.yaml
