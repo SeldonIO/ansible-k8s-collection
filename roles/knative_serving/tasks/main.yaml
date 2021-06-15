@@ -1,14 +1,14 @@
 ---
-- name: Install Knative for Istio
+- name: Install Knative (CRDS and Core)
   community.kubernetes.k8s:
     state: present
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
     - "{{ knative_crds }}"
     - "{{ knative_core }}"
-    - "{{ knative_net_istio }}"
 
-- name: Wait for KNative Serving deployments
+
+- name: Wait for KNative Serving deployments (CRDS and Core)
   community.kubernetes.k8s_info:
     kind: Deployment
     wait: yes
@@ -23,7 +23,30 @@
     - activator
     - autoscaler
     - controller
+    - webhook
+  when: knative_serving_wait_for_deployments | bool
+
+- name: Install Knative (Istio Networking)
+  community.kubernetes.k8s:
+    state: present
+    definition: "{{ lookup('url', knative_net_istio, split_lines=False) }}"
+  # register: result
+  # until: result.failed == false
+  # retries: 10
+  # delay: 1
+
+- name: Wait for KNative Serving deployments (Istio Networking)
+  community.kubernetes.k8s_info:
+    kind: Deployment
+    wait: yes
+    wait_condition:
+      type: Available
+      status: "True"
+      reason: MinimumReplicasAvailable
+    name: "{{ item }}"
+    namespace: knative-serving
+    wait_timeout: 360
+  with_items:
     - istio-webhook
     - networking-istio
-    - webhook
   when: knative_serving_wait_for_deployments | bool

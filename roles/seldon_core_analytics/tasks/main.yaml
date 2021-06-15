@@ -13,3 +13,22 @@
     chart_repo_url: "https://storage.googleapis.com/seldon-charts"
     chart_ref: "seldon-core-analytics"
     values: "{{ seldon_core_analytics_values }}"
+
+- name: Wait for Seldon Core Analytics Deployments
+  community.kubernetes.k8s_info:
+    kind: Deployment
+    wait: yes
+    wait_condition:
+      type: Available
+      status: "True"
+      reason: MinimumReplicasAvailable
+    name: "{{ item }}"
+    namespace: "{{ seldon_system_namespace }}"
+    wait_timeout: 360
+  with_items:
+    - seldon-core-analytics-grafana
+    - seldon-core-analytics-kube-state-metrics
+    - seldon-core-analytics-prometheus-alertmanager
+    - seldon-core-analytics-prometheus-pushgateway
+    - seldon-core-analytics-prometheus-seldon
+  when: seldon_core_analytics_wait_for_deployments | bool
