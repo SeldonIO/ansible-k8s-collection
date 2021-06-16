@@ -30,10 +30,7 @@
   community.kubernetes.k8s:
     state: present
     definition: "{{ lookup('url', knative_net_istio, split_lines=False) }}"
-  # register: result
-  # until: result.failed == false
-  # retries: 10
-  # delay: 1
+
 
 - name: Wait for KNative Serving deployments (Istio Networking)
   community.kubernetes.k8s_info:
