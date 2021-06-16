@@ -28,8 +28,8 @@
       type: Ready
       status: "True"
   with_items:
-    - gitea-0
     - gitea-postgresql-0
+    - gitea-0
   when: gitea_wait_for_deployments | bool
 
 
@@ -78,6 +78,9 @@
       - 200
       - 404
   register: repo_data
+  until: (repo_data.status == 200) or (repo_data.status == 404)
+  retries: 60  # 60 * 1 seconds = 1 minute
+  delay: 1     # Every 1 seconds
 
 
 - name: "Create {{ gitops_repo_name }} repository if it does not exist"
