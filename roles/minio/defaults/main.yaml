@@ -8,3 +8,7 @@ minio_rclone_secret_name: seldon-rclone-secret
 minio_kfserving_secret_name: null
 
 minio_service_type: ClusterIP
+
+minio_create_virtualservice: true
+minio_virtualservice_gateway: "istio-system/seldon-gateway"
+minio_virtualservice_prefix: "/minio/"

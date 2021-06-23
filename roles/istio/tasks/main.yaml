@@ -37,7 +37,7 @@
   community.kubernetes.k8s:
     state: present
     definition:
-      apiVersion: networking.istio.io/v1alpha3
+      apiVersion: networking.istio.io/v1beta1
       kind: Gateway
       metadata:
         name: seldon-gateway
