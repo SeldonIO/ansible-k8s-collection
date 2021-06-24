@@ -12,6 +12,7 @@
     release_namespace: "{{ seldon_system_namespace }}"
     chart_repo_url: "https://storage.googleapis.com/seldon-charts"
     chart_ref: "seldon-core-analytics"
+    chart_version: "{{ seldon_core_analytics_version }}"
     values: "{{ seldon_core_analytics_values }}"
 
 - name: Wait for Seldon Core Analytics Deployments

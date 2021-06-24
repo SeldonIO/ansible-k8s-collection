@@ -1,4 +1,5 @@
 ---
 seldon_system_namespace: seldon-system
+seldon_core_analytics_version: null
 seldon_core_analytics_values: {}
 seldon_core_analytics_wait_for_deployments: true
