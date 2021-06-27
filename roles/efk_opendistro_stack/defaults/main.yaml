@@ -1,0 +1,18 @@
+---
+seldon_system_namespace: seldon-system
+elastic_opendistro_namespace: seldon-logs
+
+elastic_opendistro_secret_name: elastic-credentials
+
+elastic_opendistro_user: admin
+elastic_opendistro_password: admin
+
+elastic_opendistro_repo: https://github.com/opendistro-for-elasticsearch/opendistro-build.git
+elastic_opendistro_version: v1.13.2
+elastic_opendistro_values: {}
+elastic_opendistro_wait_for_deployments: true
+
+
+fluentd_version: 9.6.2
+flutend_values: {}
+fluentd_wait_for_deployments: true

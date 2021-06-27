@@ -1,0 +1,6 @@
+---
+- name: "Git clone opendistro-build repo and checkout {{ elastic_opendistro_version }}"
+  ansible.builtin.git:
+    version: "{{ elastic_opendistro_version }}"
+    repo: "{{ elastic_opendistro_repo }}"
+    dest: "{{ inventory_dir }}/.resources/opendistro-build"
