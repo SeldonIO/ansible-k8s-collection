@@ -1,0 +1,26 @@
+---
+- name: Deploy Fluentd
+  community.kubernetes.helm:
+    name: fluentd
+    release_namespace: "{{ elastic_opendistro_namespace }}"
+    chart_ref: fluentd-elasticsearch
+    chart_repo_url: https://kiwigrid.github.io
+    chart_version: "{{ fluentd_version }}"
+    values: "{{ flutend_values }}"
+
+- name: Wait for Fluentd deployments
+  community.kubernetes.k8s_info:
+    kind: DaemonSet
+    wait: yes
+    #TODO: I couldn't figure out the best waiting conditions for daemonset
+    #      If this will start causing problem this may require revisit
+    # wait_condition:
+    #   type: Available
+    #   status: "True"
+    #   reason: MinimumReplicasAvailable
+    name: "{{ item }}"
+    namespace: "{{ elastic_opendistro_namespace }}"
+    wait_timeout: 360
+  with_items:
+    - fluentd-fluentd-elasticsearch
+  when: fluentd_wait_for_deployments | bool

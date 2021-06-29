@@ -1,0 +1,23 @@
+---
+- name: Deploy Elasticsearch by OpenDistro
+  community.kubernetes.helm:
+    name: elasticsearch
+    release_namespace: "{{ elastic_opendistro_namespace }}"
+    chart_ref: "{{ inventory_dir }}/.resources/opendistro-build/helm/opendistro-es"
+    values: "{{ elastic_opendistro_values }}"
+
+- name: Wait for Elasticsearch deployments
+  community.kubernetes.k8s_info:
+    kind: Deployment
+    wait: yes
+    wait_condition:
+      type: Available
+      status: "True"
+      reason: MinimumReplicasAvailable
+    name: "{{ item }}"
+    namespace: "{{ elastic_opendistro_namespace }}"
+    wait_timeout: 500
+  with_items:
+    - elasticsearch-opendistro-es-client
+    - elasticsearch-opendistro-es-kibana
+  when: elastic_opendistro_wait_for_deployments | bool
