@@ -22,7 +22,7 @@ Components:
  * Install metallb
 
 ```bash
-ansible-playbook playbooks/tempo/kind.yaml
+ansible-playbook playbooks/kind.yaml
 ```
 
 ### /playbooks/seldon_core.yaml
@@ -35,5 +35,5 @@ Components:
  * Install Seldon Core
 
 ```bash
-ansible-playbook playbooks/tempo/seldon_core.yaml
+ansible-playbook playbooks/seldon_core.yaml
 ```
