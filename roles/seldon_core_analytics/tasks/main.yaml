@@ -6,6 +6,13 @@
     kind: Namespace
     state: present
 
+- name: Create Extra Resources from Templates
+  community.kubernetes.k8s:
+    namespace: "{{ seldon_system_namespace }}"
+    template: "{{ item }}"
+  with_items:
+    - "{{ seldon_core_analytics_extra_templates }}"
+
 - name: Install Seldon Core Analytics
   community.kubernetes.helm:
     name: seldon-core-analytics
