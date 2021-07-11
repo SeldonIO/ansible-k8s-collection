@@ -21,7 +21,7 @@
 
 
 - name: Install Istio {{ istio_version }}
-  shell: "./bin/istioctl install --set profile=default"
+  shell: "./bin/istioctl install --set profile=default -y"
   args:
     chdir: "{{ inventory_dir }}/.resources/istio-{{ istio_version }}"
 
