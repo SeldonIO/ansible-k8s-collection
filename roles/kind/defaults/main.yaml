@@ -1,6 +1,10 @@
 ---
 kind_cluster_name: ansible
-kind_image_version: kindest/node:v1.18.15
+kind_image_version: kindest/node:v1.20.7@sha256:cbeaf907fc78ac97ce7b625e4bf0de16e3ea725daf6b04f930bd14c67c671ff9
+
+kind_url:  "https://kind.sigs.k8s.io/dl/{{ kind_version }}/kind-linux-amd64"
+kind_version: v0.11.1
+kind_download_cli: true
 
 kind_kubectl_default_namespace: null
 kind_config_file: null
