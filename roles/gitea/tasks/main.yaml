@@ -14,11 +14,13 @@
     name: istio-ingressgateway
     namespace: istio-system
   register: istio_web_service
+  when: gitea_use_istio | bool
 
 
 - name: "Set fact about Instio Ingress Gateway External IP"
   set_fact:
     istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+  when: gitea_use_istio | bool
 
 
 - name: Install Gitea Server
