@@ -1,0 +1,28 @@
+---
+- name: Configure GitOps
+  hosts: localhost
+  roles:
+    - istio
+    - gitea
+  vars:
+
+    istio_version: 1.7.6
+    istio_verify_install: false
+
+    gitops_user: "seldon"
+    gitops_password: "12341234"
+    gitops_repo_name: "test-repo"
+
+    gitea_values:
+      gitea:
+        admin:
+          username: "{{ gitops_user }}"
+          password: "{{ gitops_password }}"
+          email: "admin@seldon.io"
+        config:
+          server:
+            DOMAIN: "{{ istio_external_ip }}"
+            ROOT_URL: "http://{{ istio_external_ip }}/gitea/"
+      service:
+        http:
+          type: LoadBalancer

@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gitea-server
+  namespace: "{{ gitea_namespace }}"
+spec:
+  gateways:
+  - "{{ gitea_virtualservice_gateway }}"
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        prefix: /gitea/
+    - uri:
+        prefix: /gitea
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: gitea-http
+        port:
+          number: 3000
