@@ -1,10 +1,144 @@
 ---
 
-- name: Create certificates
+################### Start Get Istio External IP ###################
 
-- name: Deploy as secret
+#- name: Wait for External IP Address to be ready
+#  community.kubernetes.k8s_info:
+#    api_version: v1
+#    kind: Service
+#    name: istio-ingressgateway
+#    namespace: istio-system
+#    wait: yes
+#    wait_timeout: 360
+#  register: istio_web_service
+#  until: istio_web_service.resources[0].status.loadBalancer.ingress[0].ip != ""
+#  retries: 5
+#  delay: 2
+
+
+- name: Set fact about Istio Ingress Gateway External IP
+  set_fact:
+    istio_external_ip: "35.123.14.14141" #"{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+
+################### End Get Istio External IP ###################
+
+- name: Create temporary certificates directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: certificate
+  register: tmp_cert_dir
+
+################### Start Create Certificates ###################
+################### Start Create CA Certificate ###################
+
+- name: Generate CA Private Key with RSA 2048
+  community.crypto.openssl_privatekey:
+    path: "{{ tmp_cert_dir.path }}/ca.key"
+    size: 2048
+
+
+- name: Generate CA CSR
+  community.crypto.openssl_csr:
+    path: "{{ tmp_cert_dir.path }}/ca.csr"
+    privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
+    common_name: "{{ istio_external_ip }}"
+    basic_constraints:
+      - "CA:TRUE"
+    basic_constraints_critical: true
+
+
+- name: Generate CA Self Signed Certificate
+  community.crypto.x509_certificate:
+    path: "{{ tmp_cert_dir.path }}/ca.crt"
+    privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
+    csr_path: "{{ tmp_cert_dir.path }}/ca.csr"
+    provider: selfsigned
+
+###################### End Create CA Certificate ######################
+################### Start Create Server Certificate ###################
+
+- name: Generate Server OpenSSL private key with RSA 2048
+  community.crypto.openssl_privatekey:
+    path: "{{ tmp_cert_dir.path }}/server.key"
+    size: 2048
+
+
+- name: Generate an OpenSSL Certificate Signing Request for server
+  community.crypto.openssl_csr:
+    path: "{{ tmp_cert_dir.path }}/server.csr"
+    privatekey_path: "{{ tmp_cert_dir.path }}/server.key"
+    common_name: "{{ istio_external_ip }}"
+    basic_constraints:
+      - "CA:FALSE"
+    key_usage:
+      - nonRepudiation
+      - digitalSignature
+      - keyEncipherment
+    extended_key_usage:
+      - serverAuth
+    subject_alt_name:
+      - "DNS:istio-ingressgateway" # TODO: put istio-ingressgateway and istio-system into variables? {{service}} {{namespace}}
+      - "DNS:istio-ingressgateway.istio-system"
+      - "DNS:istio-ingressgateway.istio-system.svc"
+      - "DNS:istio-ingressgateway.istio-system.svc.cluster"
+      - "DNS:istio-ingressgateway.istio-system.svc.cluster.local"
+
+
+# TODO: Original command generates a ca.srl file that is from the CAcreateserial flag.
+#       This is not generated with these steps at the moment but may not be required
+- name: Generate an OpenSSL certificate from the server CSR signed with our CA certificate
+  community.crypto.x509_certificate:
+    path: "{{ tmp_cert_dir.path }}/server.crt"
+    csr_path: "{{ tmp_cert_dir.path }}/server.csr"
+    ownca_path: "{{ tmp_cert_dir.path }}/ca.crt"
+    ownca_privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
+    provider: ownca
+    ## TODO: Figure out if these are necessary if already specified in the CSR?
+    key_usage:
+      - nonRepudiation
+      - digitalSignature
+      - keyEncipherment
+    extended_key_usage:
+      - serverAuth
+    subject_alt_name:
+      - "DNS:istio-ingressgateway"
+      - "DNS:istio-ingressgateway.istio-system"
+      - "DNS:istio-ingressgateway.istio-system.svc"
+      - "DNS:istio-ingressgateway.istio-system.svc.cluster"
+      - "DNS:istio-ingressgateway.istio-system.svc.cluster.local"
+
+################### End Create Server Certificate ###################
+###################### End Create Certificates ######################
+################# Start Store Server Cert as Secret #################
+
+- name: Register Server CRT
+  shell: "cat {{ tmp_cert_dir.path }}/server.crt | base64"
+  register: enc_server_crt
+
+
+- name: Register Server Key
+  shell: "cat {{ tmp_cert_dir.path }}/server.key | base64"
+  register: enc_server_key
+
+
+- name: Create Istio Ingressgateway SSL Certs Secret
   community.kubernetes.k8s:
-    name: istio-ingressgateway-certs
-    api_version: v1
-    kind: Secret
     state: present
+    namespace: istio-system
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: istio-ingressgateway-certs
+      type: kubernetes.io/tls
+      data:
+        tls.crt: "{{ enc_server_crt.stdout }}"
+        tls.key: "{{ enc_server_key.stdout }}"
+
+################## End Store Server Cert as Secret ##################
+
+- name: Remove temporary certificates directory
+  ansible.builtin.file:
+    path: "{{ tmp_cert_dir.path }}"
+    state: absent
+  when: tmp_cert_dir.path is defined

@@ -2,4 +2,4 @@
 istio_version: 1.9.0
 istio_verify_install: true
 istio_create_seldon_gateway: true
-istio_secure: false
+istio_use_ssl: false

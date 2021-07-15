@@ -14,7 +14,7 @@ spec:
       name: http
       number: 80
       protocol: HTTP
-{%- if istio_secure %}
+{% if istio_use_ssl %}
   - hosts:
     - "*"
     port:
