@@ -1,0 +1,10 @@
+---
+
+- name: Create certificates
+
+- name: Deploy as secret
+  community.kubernetes.k8s:
+    name: istio-ingressgateway-certs
+    api_version: v1
+    kind: Secret
+    state: present

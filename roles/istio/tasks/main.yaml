@@ -33,24 +33,12 @@
   when: istio_verify_install | bool
 
 
+- name: Configure certificates
+  include: certificates.yaml
+
+
 - name: Create Seldon Gateway
   community.kubernetes.k8s:
     state: present
-    definition:
-      apiVersion: networking.istio.io/v1beta1
-      kind: Gateway
-      metadata:
-        name: seldon-gateway
-        namespace: istio-system
-      spec:
-        selector:
-          app: istio-ingressgateway
-          istio: ingressgateway
-        servers:
-        - hosts:
-          - '*'
-          port:
-            name: http
-            number: 80
-            protocol: HTTP
+    template: templates/gateway.yaml.j2
   when: istio_create_seldon_gateway | bool
