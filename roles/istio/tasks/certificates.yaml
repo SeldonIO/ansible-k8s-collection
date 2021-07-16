@@ -55,6 +55,7 @@
     privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
     csr_path: "{{ tmp_cert_dir.path }}/ca.csr"
     provider: selfsigned
+    selfsigned_not_after: "+365d"
 
 ###################### End Create CA Certificate ######################
 ################### Start Create Server Certificate ###################
@@ -93,6 +94,7 @@
     csr_path: "{{ tmp_cert_dir.path }}/server.csr"
     ownca_path: "{{ tmp_cert_dir.path }}/ca.crt"
     ownca_privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
+    ownca_not_after: "+365d"
     provider: ownca
     ## These are left as assertions
     key_usage:
