@@ -114,16 +114,6 @@
 ###################### End Create Certificates ######################
 ################# Start Store Server Cert as Secret #################
 
-- name: Register Server CRT
-  shell: "cat {{ tmp_cert_dir.path }}/server.crt | base64"
-  register: enc_server_crt
-
-
-- name: Register Server Key
-  shell: "cat {{ tmp_cert_dir.path }}/server.key | base64"
-  register: enc_server_key
-
-
 - name: Create Istio Ingressgateway SSL Certs Secret
   community.kubernetes.k8s:
     state: present
@@ -135,8 +125,8 @@
         name: istio-ingressgateway-certs
       type: kubernetes.io/tls
       data:
-        tls.crt: "{{ enc_server_crt.stdout }}"
-        tls.key: "{{ enc_server_key.stdout }}"
+        tls.crt: "{{ lookup('file', tmp_cert_dir.path + '/server.crt') | b64encode }}"
+        tls.key: "{{ lookup('file', tmp_cert_dir.path + '/server.key') | b64encode }}"
 
 ################## End Store Server Cert as Secret ##################
 
