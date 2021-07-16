@@ -1,12 +1,13 @@
 namespace: "seldonio"
 name: "k8s"
-version: "0.2.0-dev"
+version: "0.2.1-dev"
 readme: "README.md"
 authors:
     - "Seldon Technologies Ltd. <hello@seldon.io>"
 dependencies:
     "community.kubernetes": "*"
     "community.docker": "*"
+    "community.crypto": "*"
 license:
     - "Apache 2.0"
 tags:
