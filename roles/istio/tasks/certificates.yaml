@@ -2,23 +2,25 @@
 
 ################### Start Get Istio External IP ###################
 
-#- name: Wait for External IP Address to be ready
-#  community.kubernetes.k8s_info:
-#    api_version: v1
-#    kind: Service
-#    name: istio-ingressgateway
-#    namespace: istio-system
-#    wait: yes
-#    wait_timeout: 360
-#  register: istio_web_service
-#  until: istio_web_service.resources[0].status.loadBalancer.ingress[0].ip != ""
-#  retries: 5
-#  delay: 2
+- name: Wait for External IP Address to be ready
+  community.kubernetes.k8s_info:
+    api_version: v1
+    kind: Service
+    name: istio-ingressgateway
+    namespace: istio-system
+    wait: yes
+    wait_timeout: 360
+  register: istio_web_service
+  until: >
+    'ingress' in istio_web_service.resources[0].status.loadBalancer and
+    istio_web_service.resources[0].status.loadBalancer.ingress[0].ip != ""
+  retries: 20
+  delay: 5
 
 
 - name: Set fact about Istio Ingress Gateway External IP
   set_fact:
-    istio_external_ip: "35.123.14.14141" #"{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+    istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
 
 ################### End Get Istio External IP ###################
 
@@ -76,16 +78,15 @@
       - keyEncipherment
     extended_key_usage:
       - serverAuth
-    subject_alt_name:
-      - "DNS:istio-ingressgateway" # TODO: put istio-ingressgateway and istio-system into variables? {{service}} {{namespace}}
+    subject_alt_name: # TODO: put istio-ingressgateway and istio-system into variables? {{service}} {{namespace}}
+      - "DNS:istio-ingressgateway"
       - "DNS:istio-ingressgateway.istio-system"
       - "DNS:istio-ingressgateway.istio-system.svc"
       - "DNS:istio-ingressgateway.istio-system.svc.cluster"
       - "DNS:istio-ingressgateway.istio-system.svc.cluster.local"
 
 
-# TODO: Original command generates a ca.srl file that is from the CAcreateserial flag.
-#       This is not generated with these steps at the moment but may not be required
+# TODO: It is uncertain if a ca.srl file that is generated from the CAcreateserial flag is required
 - name: Generate an OpenSSL certificate from the server CSR signed with our CA certificate
   community.crypto.x509_certificate:
     path: "{{ tmp_cert_dir.path }}/server.crt"
@@ -93,7 +94,7 @@
     ownca_path: "{{ tmp_cert_dir.path }}/ca.crt"
     ownca_privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
     provider: ownca
-    ## TODO: Figure out if these are necessary if already specified in the CSR?
+    ## These are left as assertions
     key_usage:
       - nonRepudiation
       - digitalSignature
