@@ -8,3 +8,6 @@ kind_download_cli: true
 
 kind_kubectl_default_namespace: null
 kind_config_file: null
+
+kind_deploy_metrics_server: true
+metrics_server_version: v0.5.0
