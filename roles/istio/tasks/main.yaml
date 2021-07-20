@@ -42,4 +42,4 @@
 
 - name: Configure certificates
   include: certificates.yaml
-  when: istio_ssl.enabled | bool
+  when: istio_use_ssl | bool

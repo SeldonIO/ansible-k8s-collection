@@ -14,7 +14,7 @@ spec:
       name: http
       number: 80
       protocol: HTTP
-{% if istio_ssl.enabled %}
+{% if istio_use_ssl %}
   - hosts:
     - "*"
     port:
@@ -25,4 +25,4 @@ spec:
       mode: SIMPLE
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
       privateKey: /etc/istio/ingressgateway-certs/tls.key
-{%- endif %}
+{% endif %}

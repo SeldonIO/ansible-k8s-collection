@@ -2,8 +2,10 @@
 istio_version: 1.9.0
 istio_verify_install: true
 istio_create_seldon_gateway: true
-istio_ssl:
-  enabled: true
-  self_signed_ca: true
+
+istio_use_ssl: false
+istio_use_self_signed_ca: false
+
+istio_ssl_certificates:
   server_crt_path: null
   server_key_path: null

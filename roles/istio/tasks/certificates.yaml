@@ -1,8 +1,12 @@
 ---
+- name: Check if certificate paths are set
+  set_fact:
+    certificate_paths_provided: "{{ (istio_ssl_certificates.server_crt_path is defined) and (istio_ssl_certificates.server_key_path is defined) and (istio_ssl_certificates.server_crt_path is not none) and (istio_ssl_certificates.server_key_path is not none)}}"
+
 - name: Check istio_ssl configuration
   fail:
     msg: "When not using self signed certificates the certificates paths must be provided."
-  when: not (istio_ssl.self_signed_ca | bool) and (istio_ssl.server_crt_path is undefined or istio_ssl.server_key_path is undefined or istio_ssl.server_crt_path is none or istio_ssl.server_key_path is none)
+  when: (not istio_use_self_signed_ca | bool) and (not certificate_paths_provided | bool)
 
 
 - name: Wait for External IP Address to be ready
@@ -30,24 +34,24 @@
     state: directory
     suffix: certificate
   register: tmp_cert_dir
-  when: istio_ssl.self_signed_ca | bool
+  when: istio_use_self_signed_ca | bool
 
 
 - name: Generate Self Signed Server SSL Certs from Self Signed CA
   include: self_signed.yaml
-  when: istio_ssl.self_signed_ca | bool
+  when: istio_use_self_signed_ca | bool
 
 - name: Set fact about Server SSL Certs Paths (self-signed certificates)
   set_fact:
     server_crt_path: "{{ tmp_cert_dir.path + '/server.crt' }}"
     server_key_path: "{{ tmp_cert_dir.path + '/server.key' }}"
-  when: istio_ssl.self_signed_ca | bool
+  when: istio_use_self_signed_ca | bool
 
 - name: Set fact about Server SSL Certs Paths (not self-signed certificates)
   set_fact:
-    server_crt_path: "{{ istio_ssl.server_crt_path }}"
-    server_key_path: "{{ istio_ssl.server_key_path }}"
-  when: not (istio_ssl.self_signed_ca | bool)
+    server_crt_path: "{{ istio_ssl_certificates.server_crt_path }}"
+    server_key_path: "{{ istio_ssl_certificates.server_key_path }}"
+  when: not (istio_use_self_signed_ca | bool)
 
 
 - name: Create Istio Ingressgateway SSL Certs Secret
@@ -69,4 +73,4 @@
   ansible.builtin.file:
     path: "{{ tmp_cert_dir.path }}"
     state: absent
-  when: (istio_ssl.self_signed_ca | bool) and tmp_cert_dir.path is defined
+  when: (istio_use_self_signed_ca | bool) and tmp_cert_dir.path is defined
