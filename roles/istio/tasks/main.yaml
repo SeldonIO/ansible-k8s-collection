@@ -41,5 +41,19 @@
 
 
 - name: Configure certificates
-  include: certificates.yaml
-  when: istio_use_ssl | bool
+  block:
+    - name: Create temporary certificates directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: certificate
+      register: tmp_cert_dir
+    - name: Generate certificates
+      include: certificates.yaml
+  always:
+    - name: Remove temporary certificates directory
+      ansible.builtin.file:
+        path: "{{ tmp_cert_dir.path }}"
+        state: absent
+      when: tmp_cert_dir.path is defined
+  when: >
+    istio_ssl.enabled | bool

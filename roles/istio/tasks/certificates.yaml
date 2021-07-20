@@ -1,4 +1,7 @@
 ---
+- name: Check istio_ssl configs
+  fail: msg="istio_ssl.self_signed_ca=false option is not yet implemented. CA certificates can only be self signed at the moment"
+  when: not istio_ssl.self_signed_ca
 
 
 - name: Wait for External IP Address to be ready
@@ -21,12 +24,6 @@
   set_fact:
     istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
 
-
-- name: Create temporary certificates directory
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: certificate
-  register: tmp_cert_dir
 
 
 - name: Generate CA Private Key with RSA 2048
@@ -118,10 +115,3 @@
       data:
         tls.crt: "{{ lookup('file', tmp_cert_dir.path + '/server.crt') | b64encode }}"
         tls.key: "{{ lookup('file', tmp_cert_dir.path + '/server.key') | b64encode }}"
-
-
-- name: Remove temporary certificates directory
-  ansible.builtin.file:
-    path: "{{ tmp_cert_dir.path }}"
-    state: absent
-  when: tmp_cert_dir.path is defined
