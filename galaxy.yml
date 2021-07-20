@@ -5,7 +5,7 @@ readme: "README.md"
 authors:
     - "Seldon Technologies Ltd. <hello@seldon.io>"
 dependencies:
-    "community.kubernetes": "*"
+    "community.kubernetes": "<2.0.0"
     "community.docker": "*"
 license:
     - "Apache 2.0"
