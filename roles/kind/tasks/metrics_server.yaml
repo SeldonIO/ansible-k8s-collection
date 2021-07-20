@@ -1,0 +1,25 @@
+---
+# Credits to Geerlingguy https://github.com/kubernetes-sigs/kind/issues/398#issuecomment-682072236
+
+- name: Download metrics-server manifest.
+  get_url:
+    url: https://github.com/kubernetes-sigs/metrics-server/releases/download/{{ metrics_server_version }}/components.yaml
+    dest: /tmp/metrics-server.yaml
+    mode: 0644
+
+- name: Modify the manifest to allow insecure TLS for testing.
+  lineinfile:
+    path: /tmp/metrics-server.yaml
+    state: present
+    regexp: "^.+{{ item }}$"
+    line: "        - --{{ item }}"
+    insertafter: "^.+args:$"
+  with_items:
+    - kubelet-preferred-address-types=InternalIP
+    - kubelet-insecure-tls
+
+- name: Deploy metrics-server into the cluster.
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/metrics-server.yaml
+    wait: true

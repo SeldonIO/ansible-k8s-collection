@@ -8,3 +8,7 @@
 
 - name: Create and set default namespace
   include: default_namespace.yaml
+
+- name: Deploy metrics server
+  include: metrics_server.yaml
+  when: kind_deploy_metrics_server | bool
