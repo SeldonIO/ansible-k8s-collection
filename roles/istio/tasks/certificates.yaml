@@ -1,7 +1,17 @@
 ---
+- name: Register ssl config options
+  set_fact:
+    server_certs_paths_defined: "{{ istio_ssl.server_crt_path is defined and istio_ssl.server_key_path is defined }}"
+    self_signed_ca: "{{ istio_ssl.self_signed_ca }}"
+
 - name: Check istio_ssl configs
-  fail: msg="istio_ssl.self_signed_ca=false option is not yet implemented. CA certificates can only be self signed at the moment"
-  when: not istio_ssl.self_signed_ca
+  fail:
+    msg: >
+      Bad istio_ssl configs: Either server cert and key paths are provided (server_crt_path and server_key_path),
+      or only self_signed_certs must be true: {{ istio_ssl }}
+  when: >
+    (not server_certs_paths_defined and not self_signed_ca) or
+    (server_certs_paths_defined and self_signed_ca)
 
 
 - name: Create temporary certificates directory
@@ -32,81 +42,15 @@
     istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
 
 
-
-- name: Generate CA Private Key with RSA 2048
-  community.crypto.openssl_privatekey:
-    path: "{{ tmp_cert_dir.path }}/ca.key"
-    size: 2048
+- name: Generate Self Signed Server SSL Certs from Self Signed CA
+  include: self_signed.yaml
+  when: self_signed_ca
 
 
-- name: Generate CA CSR
-  community.crypto.openssl_csr:
-    path: "{{ tmp_cert_dir.path }}/ca.csr"
-    privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
-    common_name: "{{ istio_external_ip }}"
-    basic_constraints:
-      - "CA:TRUE"
-    basic_constraints_critical: true
-
-
-- name: Generate CA Self Signed Certificate
-  community.crypto.x509_certificate:
-    path: "{{ tmp_cert_dir.path }}/ca.crt"
-    privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
-    csr_path: "{{ tmp_cert_dir.path }}/ca.csr"
-    provider: selfsigned
-    selfsigned_not_after: "+365d"
-
-
-- name: Generate Server OpenSSL private key with RSA 2048
-  community.crypto.openssl_privatekey:
-    path: "{{ tmp_cert_dir.path }}/server.key"
-    size: 2048
-
-
-- name: Generate an OpenSSL Certificate Signing Request for server
-  community.crypto.openssl_csr:
-    path: "{{ tmp_cert_dir.path }}/server.csr"
-    privatekey_path: "{{ tmp_cert_dir.path }}/server.key"
-    common_name: "{{ istio_external_ip }}"
-    basic_constraints:
-      - "CA:FALSE"
-    key_usage:
-      - nonRepudiation
-      - digitalSignature
-      - keyEncipherment
-    extended_key_usage:
-      - serverAuth
-    subject_alt_name: # TODO: put istio-ingressgateway and istio-system into variables? {{service}} {{namespace}}
-      - "DNS:istio-ingressgateway"
-      - "DNS:istio-ingressgateway.istio-system"
-      - "DNS:istio-ingressgateway.istio-system.svc"
-      - "DNS:istio-ingressgateway.istio-system.svc.cluster"
-      - "DNS:istio-ingressgateway.istio-system.svc.cluster.local"
-
-
-# TODO: It is uncertain if a ca.srl file that is generated from the CAcreateserial flag is required
-- name: Generate an OpenSSL certificate from the server CSR signed with our CA certificate
-  community.crypto.x509_certificate:
-    path: "{{ tmp_cert_dir.path }}/server.crt"
-    csr_path: "{{ tmp_cert_dir.path }}/server.csr"
-    ownca_path: "{{ tmp_cert_dir.path }}/ca.crt"
-    ownca_privatekey_path: "{{ tmp_cert_dir.path }}/ca.key"
-    ownca_not_after: "+365d"
-    provider: ownca
-    ## These are left as assertions
-    key_usage:
-      - nonRepudiation
-      - digitalSignature
-      - keyEncipherment
-    extended_key_usage:
-      - serverAuth
-    subject_alt_name:
-      - "DNS:istio-ingressgateway"
-      - "DNS:istio-ingressgateway.istio-system"
-      - "DNS:istio-ingressgateway.istio-system.svc"
-      - "DNS:istio-ingressgateway.istio-system.svc.cluster"
-      - "DNS:istio-ingressgateway.istio-system.svc.cluster.local"
+- name: Set fact about Server SSL Certs Paths
+  set_fact:
+    server_crt_path: "{{ tmp_cert_dir.path + '/server.crt' if self_signed_ca else istio_ssl.server_crt_path }}"
+    server_key_path: "{{ tmp_cert_dir.path + '/server.key' if self_signed_ca else istio_ssl.server_key_path }}"
 
 
 - name: Create Istio Ingressgateway SSL Certs Secret
@@ -120,8 +64,8 @@
         name: istio-ingressgateway-certs
       type: kubernetes.io/tls
       data:
-        tls.crt: "{{ lookup('file', tmp_cert_dir.path + '/server.crt') | b64encode }}"
-        tls.key: "{{ lookup('file', tmp_cert_dir.path + '/server.key') | b64encode }}"
+        tls.crt: "{{ lookup('file', server_crt_path) | b64encode }}"
+        tls.key: "{{ lookup('file', server_key_path) | b64encode }}"
 
 
 - name: Remove temporary certificates directory
@@ -129,3 +73,4 @@
     path: "{{ tmp_cert_dir.path }}"
     state: absent
   when: tmp_cert_dir.path is defined
+
