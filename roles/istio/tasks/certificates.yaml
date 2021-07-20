@@ -4,6 +4,13 @@
   when: not istio_ssl.self_signed_ca
 
 
+- name: Create temporary certificates directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: certificate
+  register: tmp_cert_dir
+
+
 - name: Wait for External IP Address to be ready
   community.kubernetes.k8s_info:
     api_version: v1
@@ -115,3 +122,10 @@
       data:
         tls.crt: "{{ lookup('file', tmp_cert_dir.path + '/server.crt') | b64encode }}"
         tls.key: "{{ lookup('file', tmp_cert_dir.path + '/server.key') | b64encode }}"
+
+
+- name: Remove temporary certificates directory
+  ansible.builtin.file:
+    path: "{{ tmp_cert_dir.path }}"
+    state: absent
+  when: tmp_cert_dir.path is defined
