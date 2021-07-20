@@ -5,6 +5,5 @@ istio_create_seldon_gateway: true
 istio_ssl:
   enabled: true
   self_signed_ca: true
-#  server_crt_path: /path/to/server.crt
-#  server_key_path: /path/to/server.key
-
+  server_crt_path: null
+  server_key_path: null
