@@ -7,6 +7,7 @@ authors:
 dependencies:
     "community.kubernetes": "<2.0.0"
     "community.docker": "*"
+    "community.crypto": "*"
 license:
     - "Apache 2.0"
 tags:
