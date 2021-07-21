@@ -4,7 +4,6 @@
     path: "{{ tmp_cert_dir.path }}/ca.key"
     size: 2048
 
-
 - name: Generate CA CSR
   community.crypto.openssl_csr:
     path: "{{ tmp_cert_dir.path }}/ca.csr"
@@ -14,7 +13,6 @@
       - "CA:TRUE"
     basic_constraints_critical: true
 
-
 - name: Generate CA Self Signed Certificate
   community.crypto.x509_certificate:
     path: "{{ tmp_cert_dir.path }}/ca.crt"
@@ -23,12 +21,10 @@
     provider: selfsigned
     selfsigned_not_after: "+365d"
 
-
 - name: Generate Server OpenSSL private key with RSA 2048
   community.crypto.openssl_privatekey:
     path: "{{ tmp_cert_dir.path }}/server.key"
     size: 2048
-
 
 - name: Generate an OpenSSL Certificate Signing Request for server
   community.crypto.openssl_csr:
@@ -49,7 +45,6 @@
       - "DNS:istio-ingressgateway.istio-system.svc"
       - "DNS:istio-ingressgateway.istio-system.svc.cluster"
       - "DNS:istio-ingressgateway.istio-system.svc.cluster.local"
-
 
 # TODO: It is uncertain if a ca.srl file that is generated from the CAcreateserial flag is required
 - name: Generate an OpenSSL certificate from the server CSR signed with our CA certificate

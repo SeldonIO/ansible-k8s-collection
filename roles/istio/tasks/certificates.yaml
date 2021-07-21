@@ -1,26 +1,4 @@
 ---
-- name: Register ssl config options
-  set_fact:
-    server_certs_paths_defined: "{{ istio_ssl.server_crt_path is defined and istio_ssl.server_key_path is defined }}"
-    self_signed_ca: "{{ istio_ssl.self_signed_ca }}"
-
-- name: Check istio_ssl configs
-  fail:
-    msg: >
-      Bad istio_ssl configs: Either server cert and key paths are provided (server_crt_path and server_key_path),
-      or only self_signed_certs must be true: {{ istio_ssl }}
-  when: >
-    (not server_certs_paths_defined and not self_signed_ca) or
-    (server_certs_paths_defined and self_signed_ca)
-
-
-- name: Create temporary certificates directory
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: certificate
-  register: tmp_cert_dir
-
-
 - name: Wait for External IP Address to be ready
   community.kubernetes.k8s_info:
     api_version: v1
@@ -36,21 +14,25 @@
   retries: 20
   delay: 5
 
-
 - name: Set fact about Istio Ingress Gateway External IP
   set_fact:
     istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
 
 
+- name: Create temporary certificates directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: certificate
+  register: tmp_cert_dir
+
+
 - name: Generate Self Signed Server SSL Certs from Self Signed CA
   include: self_signed.yaml
-  when: self_signed_ca
-
 
 - name: Set fact about Server SSL Certs Paths
   set_fact:
-    server_crt_path: "{{ tmp_cert_dir.path + '/server.crt' if self_signed_ca else istio_ssl.server_crt_path }}"
-    server_key_path: "{{ tmp_cert_dir.path + '/server.key' if self_signed_ca else istio_ssl.server_key_path }}"
+    server_crt_path: "{{ tmp_cert_dir.path + '/server.crt' }}"
+    server_key_path: "{{ tmp_cert_dir.path + '/server.key' }}"
 
 
 - name: Create Istio Ingressgateway SSL Certs Secret
@@ -72,5 +54,3 @@
   ansible.builtin.file:
     path: "{{ tmp_cert_dir.path }}"
     state: absent
-  when: tmp_cert_dir.path is defined
-

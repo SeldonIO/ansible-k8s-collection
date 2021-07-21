@@ -2,9 +2,8 @@
 istio_version: 1.9.0
 istio_verify_install: true
 istio_create_seldon_gateway: true
-istio_ssl:
-  enabled: true
-  self_signed_ca: true
-#  server_crt_path: /path/to/server.crt
-#  server_key_path: /path/to/server.key
 
+istio_use_ssl: true
+istio_self_signed_certs: "{{ istio_use_ssl }}"
+
+istio_seldon_gateway: "{{ lookup('template', 'default-seldon-gateway.yaml.j2') | from_yaml }}"
