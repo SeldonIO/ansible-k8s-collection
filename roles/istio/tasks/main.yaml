@@ -36,10 +36,10 @@
 - name: Create Seldon Gateway
   community.kubernetes.k8s:
     state: present
-    template: templates/gateway.yaml.j2
+    definition: "{{ istio_seldon_gateway }}"
   when: istio_create_seldon_gateway | bool
 
 
 - name: Configure certificates
   include: certificates.yaml
-  when: istio_use_ssl | bool
+  when: istio_self_signed_certs | bool
