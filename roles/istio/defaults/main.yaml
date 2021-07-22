@@ -3,7 +3,7 @@ istio_version: 1.9.0
 istio_verify_install: true
 istio_create_seldon_gateway: true
 
-istio_use_ssl: true
+istio_use_ssl: false
 istio_self_signed_certs: "{{ istio_use_ssl }}"
 
 istio_seldon_gateway: "{{ lookup('template', 'default-seldon-gateway.yaml.j2') | from_yaml }}"
