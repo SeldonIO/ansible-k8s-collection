@@ -4,8 +4,8 @@
     name: minio
     release_namespace: "{{ minio_namespace }}"
     chart_ref: "minio"
+    chart_version: "{{ minio_chart_version }}"
     chart_repo_url: "https://helm.min.io/"
-
     values:
       accessKey: "{{ minio_access_key }}"
       secretKey: "{{ minio_secret_key }}"
