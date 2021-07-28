@@ -56,6 +56,16 @@
   loop_control:
     loop_var: loop_namespace
 
+- name: Configure ArgoCD git repository
+  kubernetes.core.k8s:
+    state: present
+    template: templates/argocd-repository-secret.yaml.j2
+
+- name: Update ArgoCD ConfigMap
+  kubernetes.core.k8s:
+    state: present
+    template: templates/argocd-configmap.yaml.j2
+
 - name: Configure Seldon Deploy git-creds secret
   kubernetes.core.k8s:
     state: present
