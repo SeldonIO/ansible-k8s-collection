@@ -15,9 +15,8 @@
     release_namespace: "{{ argocd_namespace }}"
     chart_repo_url: "https://argoproj.github.io/argo-helm"
     chart_ref: "argo-cd"
-    chart_version: "{{ argocd_version }}"
+    chart_version: "{{ argocd_chart_version }}"
     values: "{{ argocd_values }}"
-    values_files: "{{ argocd_values_files }}"
 
 - name: Wait for ArgoCD deployments
   kubernetes.core.k8s_info:
