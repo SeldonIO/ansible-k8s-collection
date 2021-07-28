@@ -34,7 +34,7 @@
         - "*"
         verbs:
         - "*"
-  loop: "{{ workflow_namespaces }}"
+  loop: "{{ argo_workflows_rbac_namespaces }}"
   loop_control:
     loop_var: loop_namespace
 
@@ -48,7 +48,7 @@
       kind: ServiceAccount
       metadata:
         name: workflow
-  loop: "{{ workflow_namespaces }}"
+  loop: "{{ argo_workflows_rbac_namespaces }}"
   loop_control:
     loop_var: loop_namespace
 
@@ -70,6 +70,6 @@
         apiGroup: rbac.authorization.k8s.io
         kind: Role
         name: workflow
-  loop: "{{ workflow_namespaces }}"
+  loop: "{{ argo_workflows_rbac_namespaces }}"
   loop_control:
     loop_var: loop_namespace

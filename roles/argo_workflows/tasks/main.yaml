@@ -1,21 +1,19 @@
 ---
-- name: "Create a k8s namespaces: {{ argo_namespace }}"
+- name: "Create a k8s namespaces: {{ argo_workflows_namespace }}"
   kubernetes.core.k8s:
-    name: "{{ argo_namespace }}"
+    name: "{{ argo_workflows_namespace }}"
     api_version: v1
     kind: Namespace
     state: present
 
 - name: Install Argo Workflows
   kubernetes.core.helm:
-  community.kubernetes.helm:
-    name: argo
-    release_namespace: "{{ argo_namespace }}"
+    name: argo-workflows
+    release_namespace: "{{ argo_workflows_namespace }}"
     chart_repo_url: "https://argoproj.github.io/argo-helm"
-    chart_ref: "argo"
-    chart_version: "{{ argo_version }}"
-    values: "{{ argo_values }}"
-    values_files: "{{ argo_values_files }}"
+    chart_ref: "argo-workflows"
+    chart_version: "{{ argo_workflows_chart_version }}"
+    values: "{{ argo_workflows_values }}"
 
 - name: Wait for Argo deployments
   kubernetes.core.k8s_info:
@@ -26,13 +24,13 @@
       status: "True"
       reason: MinimumReplicasAvailable
     name: "{{ item }}"
-    namespace: "{{ argo_namespace }}"
+    namespace: "{{ argo_workflows_namespace }}"
     wait_timeout: 360
   with_items:
-    - argo-server
-    - argo-workflow-controller
-  when: argo_wait_for_deployments | bool
+    - argo-workflows-server
+    - argo-workflows-workflow-controller
+  when: argo_workflows_wait_for_deployments | bool
 
 - name: Configure Service RBAC
   include: rbac.yaml
-  when: argo_configure_rbac | bool
+  when: argo_workflows_configure_rbac | bool
