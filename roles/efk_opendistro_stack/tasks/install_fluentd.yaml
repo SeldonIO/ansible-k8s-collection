@@ -5,7 +5,7 @@
     release_namespace: "{{ elastic_opendistro_namespace }}"
     chart_ref: fluentd-elasticsearch
     chart_repo_url: https://kiwigrid.github.io
-    chart_version: "{{ fluentd_version }}"
+    chart_version: "{{ fluentd_chart_version }}"
     values: "{{ flutend_values }}"
 
 - name: Wait for Fluentd deployments
