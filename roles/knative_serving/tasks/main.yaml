@@ -1,6 +1,6 @@
 ---
 - name: Install Knative (CRDS and Core)
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
@@ -9,7 +9,7 @@
 
 
 - name: Wait for KNative Serving deployments (CRDS and Core)
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Deployment
     wait: yes
     wait_condition:
@@ -27,13 +27,13 @@
   when: knative_serving_wait_for_deployments | bool
 
 - name: Install Knative (Istio Networking)
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('url', knative_net_istio, split_lines=False) }}"
 
 
 - name: Wait for KNative Serving deployments (Istio Networking)
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Deployment
     wait: yes
     wait_condition:

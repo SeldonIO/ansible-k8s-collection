@@ -34,7 +34,7 @@
 
 
 - name: Create Seldon Gateway
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ istio_seldon_gateway }}"
   when: istio_create_seldon_gateway | bool

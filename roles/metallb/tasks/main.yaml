@@ -24,7 +24,7 @@
 
 
 - name: Deploy MetalLB
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
@@ -43,7 +43,7 @@
 
 
 - name: Create memberlist secret
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     name: memberlist
     namespace: metallb-system
@@ -56,7 +56,7 @@
 
 
 - name: Create MetalLB Config
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     template: templates/metallb_config.yaml.j2
   when: (metallb_range_start is defined) and (metallb_range_stop is defined)

@@ -1,6 +1,6 @@
 ---
 - name: Deploy Postgres Operator by Zalando
-  community.kubernetes.helm:
+  kubernetes.core.helm:
     name: postgres-operator
     release_namespace: "{{ postgres_operator_namespace }}"
     chart_ref: "{{ inventory_dir }}/.resources/postgres-operator/charts/postgres-operator"

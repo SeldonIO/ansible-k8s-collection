@@ -1,6 +1,6 @@
 ---
 - name: "Create a k8s namespaces: {{ gitea_namespace }}"
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     name: "{{ gitea_namespace }}"
     api_version: v1
     kind: Namespace
@@ -8,7 +8,7 @@
 
 
 - name: Get information about Ingress Gateway
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Service
     name: istio-ingressgateway
@@ -24,7 +24,7 @@
 
 
 - name: Install Gitea Server
-  community.kubernetes.helm:
+  kubernetes.core.helm:
     name: gitea
     release_namespace: "{{ gitea_namespace }}"
     chart_repo_url: "https://dl.gitea.io/charts/"
@@ -35,7 +35,7 @@
 
 
 - name: Wait for Gitea pods
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Pod
     name: "{{ item }}"
     namespace: "{{ gitea_namespace }}"
@@ -51,7 +51,7 @@
 
 
 - name: Wait for Gitea deployments (memcached)
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Deployment
     name: "{{ item }}"
     namespace: "{{ gitea_namespace }}"
@@ -66,7 +66,7 @@
 
 
 - name: Get an existing Service object
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Service
     name: gitea-http
@@ -117,7 +117,7 @@
 
 
 - name: Configure GiTea VirtualService
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     template: templates/gitea-vs.yaml.j2
   when: gitea_create_virtualservice | bool

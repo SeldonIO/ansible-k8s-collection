@@ -19,7 +19,7 @@
     - kubelet-insecure-tls
 
 - name: Deploy metrics-server into the cluster.
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     src: /tmp/metrics-server.yaml
     wait: true

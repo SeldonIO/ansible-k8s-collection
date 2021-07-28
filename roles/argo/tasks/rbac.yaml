@@ -1,6 +1,6 @@
 ---
 - name: Create Workflow Role
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     name: workflow
     namespace: "{{ loop_namespace }}"
@@ -39,7 +39,7 @@
     loop_var: loop_namespace
 
 - name: Create Workflow Role
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     name: workflow
     namespace: "{{ loop_namespace }}"
@@ -53,7 +53,7 @@
     loop_var: loop_namespace
 
 - name: Create Rolebinding
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     name: workflow
     namespace: "{{ loop_namespace }}"

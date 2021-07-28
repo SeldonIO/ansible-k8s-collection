@@ -1,12 +1,13 @@
 ---
 - name: "Create a k8s namespaces: {{ argo_namespace }}"
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     name: "{{ argo_namespace }}"
     api_version: v1
     kind: Namespace
     state: present
 
 - name: Install Argo Workflows
+  kubernetes.core.helm:
   community.kubernetes.helm:
     name: argo
     release_namespace: "{{ argo_namespace }}"
@@ -17,7 +18,7 @@
     values_files: "{{ argo_values_files }}"
 
 - name: Wait for Argo deployments
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Deployment
     wait: yes
     wait_condition:
