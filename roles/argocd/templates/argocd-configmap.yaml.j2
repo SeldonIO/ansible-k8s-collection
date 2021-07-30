@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "argocd-cm"
+  namespace: "{{ argocd_namespace }}"
+data:
+  repositories: |
+    - url: "{{ gitops_repository }}"
+      passwordSecret:
+        name: seldon-gitea-repo
+        key: password
+      usernameSecret:
+        name: seldon-gitea-repo
+        key: username

@@ -14,7 +14,7 @@
   ansible.builtin.shell: "kustomize build {{ inventory_dir }}/.resources/iter8/install/core | kubectl apply -n {{ iter8_namespace }} -f -"
 
 - name: Wait for Iter8 deployments
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Deployment
     wait: yes
     wait_condition:

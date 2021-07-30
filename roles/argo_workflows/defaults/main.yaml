@@ -1,0 +1,10 @@
+---
+argo_workflows_namespace: "argo-workflows"
+argo_workflows_chart_version: 0.2.7
+
+argo_workflows_wait_for_deployments: true
+argo_workflows_configure_rbac: true
+
+argo_workflows_values: {}
+
+argo_workflows_rbac_namespaces: []

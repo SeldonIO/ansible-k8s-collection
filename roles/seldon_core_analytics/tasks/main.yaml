@@ -1,20 +1,20 @@
 ---
 - name: "Create a {{ seldon_system_namespace }} namespaces"
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     name: "{{ seldon_system_namespace }}"
     api_version: v1
     kind: Namespace
     state: present
 
 - name: Create Extra Resources from Templates
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     namespace: "{{ seldon_system_namespace }}"
     template: "{{ item }}"
   with_items:
     - "{{ seldon_core_analytics_extra_templates }}"
 
 - name: Install Seldon Core Analytics
-  community.kubernetes.helm:
+  kubernetes.core.helm:
     name: seldon-core-analytics
     release_namespace: "{{ seldon_system_namespace }}"
     chart_repo_url: "https://storage.googleapis.com/seldon-charts"
@@ -23,7 +23,7 @@
     values: "{{ seldon_core_analytics_values }}"
 
 - name: Wait for Seldon Core Analytics Deployments
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Deployment
     wait: yes
     wait_condition:

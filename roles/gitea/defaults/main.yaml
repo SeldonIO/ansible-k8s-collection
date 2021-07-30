@@ -1,6 +1,6 @@
 ---
 gitea_namespace: gitea-system
-gitea_version: 4.0.0
+gitea_version: 4.0.1
 
 gitea_values: {}
 gitea_values_files: []

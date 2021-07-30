@@ -1,6 +1,6 @@
 ---
 - name: Create a k8s namespaces
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     name: "{{ item }}"
     api_version: v1
     kind: Namespace

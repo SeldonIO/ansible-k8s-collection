@@ -1,15 +1,15 @@
 ---
 - name: Deploy Fluentd
-  community.kubernetes.helm:
+  kubernetes.core.helm:
     name: fluentd
     release_namespace: "{{ elastic_opendistro_namespace }}"
     chart_ref: fluentd-elasticsearch
     chart_repo_url: https://kiwigrid.github.io
-    chart_version: "{{ fluentd_version }}"
+    chart_version: "{{ fluentd_chart_version }}"
     values: "{{ flutend_values }}"
 
 - name: Wait for Fluentd deployments
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: DaemonSet
     wait: yes
     #TODO: I couldn't figure out the best waiting conditions for daemonset

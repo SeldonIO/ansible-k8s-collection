@@ -1,11 +1,10 @@
 ---
 argocd_namespace: argocd
-argocd_version: null
+argocd_chart_version: 3.9.0
 
 argocd_wait_for_deployments: true
 
 argocd_values: {}
-argocd_values_files: []
 
 gitops_repository: ""
 gitops_namespaces: []

@@ -13,6 +13,6 @@ elastic_opendistro_values: {}
 elastic_opendistro_wait_for_deployments: true
 
 
-fluentd_version: 9.6.2
+fluentd_chart_version: 9.6.2
 flutend_values: {}
 fluentd_wait_for_deployments: true

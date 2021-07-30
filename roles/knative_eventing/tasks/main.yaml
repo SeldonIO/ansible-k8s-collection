@@ -1,6 +1,6 @@
 ---
 - name: Install Knative Eventing
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
@@ -10,7 +10,7 @@
     - "{{ knative_eventing_broker }}"
 
 - name: Wait for KNative Eventing deployments
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kind: Deployment
     wait: yes
     wait_condition:
@@ -32,7 +32,7 @@
   when: knative_eventing_wait_for_deployments | bool
 
 - name: Add tag resolution disabled repositories
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     kind: ConfigMap
     name: config-deployment
     namespace: knative-serving

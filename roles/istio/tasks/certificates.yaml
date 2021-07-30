@@ -1,6 +1,6 @@
 ---
 - name: Wait for External IP Address to be ready
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Service
     name: istio-ingressgateway
@@ -36,7 +36,7 @@
 
 
 - name: Create Istio Ingressgateway SSL Certs Secret
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: istio-system
     definition:
