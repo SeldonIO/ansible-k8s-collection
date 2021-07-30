@@ -1,8 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: seldon
-  namespace: {{ argocd_namespace }}
+  name: "seldon"
+  namespace: "{{ argocd_namespace }}"
 spec:
   description: Seldon Gitops Project
   sourceRepos:

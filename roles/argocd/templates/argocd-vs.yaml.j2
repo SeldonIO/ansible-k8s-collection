@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
- name: argocd-server
+ name: "argocd-server"
  namespace: "{{ argocd_namespace }}"
 spec:
  gateways:
