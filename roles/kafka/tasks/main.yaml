@@ -1,0 +1,7 @@
+---
+- name: Create Namespaces
+  include: namespaces.yaml
+
+- name: Install Minio
+  include: install.yaml
+

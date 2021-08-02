@@ -1,0 +1,29 @@
+---
+- name: Install Strimzi Operator
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('url', item, split_lines=False) }}"
+  with_items:
+    - "{{ kafka_install_url }}"
+
+- name: Wait for KNative Eventing deployments
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    wait: yes
+    wait_condition:
+      type: Available
+      status: "True"
+      reason: MinimumReplicasAvailable
+    name: "{{ item }}"
+    namespace: "{{ kafka_namespace }}"
+    wait_timeout: 360
+  with_items:
+    - strimzi-cluster-operator
+
+- name: Create Kafka Cluster
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ kafka_namespace }}"
+    template: templates/cluster.yaml.j2
+  when: kafka_create_cluster | bool
+
