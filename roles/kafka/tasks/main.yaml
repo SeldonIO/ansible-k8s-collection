@@ -2,6 +2,6 @@
 - name: Create Namespaces
   include: namespaces.yaml
 
-- name: Install Minio
+- name: Install Kafka
   include: install.yaml
 
