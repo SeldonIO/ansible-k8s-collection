@@ -1,5 +1,5 @@
 kafka_namespace: kafka
-kafka_install_url: https://strimzi.io/install/latest?namespace=kafka
+kafka_install_url: https://strimzi.io/install/latest?namespace={{ kafka_namespace }}
 kafka_create_cluster: true
 kafka_create_metrics: true
 kafka_replicas: 3
