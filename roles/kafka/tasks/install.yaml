@@ -6,7 +6,7 @@
   with_items:
     - "{{ kafka_install_url }}"
 
-- name: Wait for KNative Eventing deployments
+- name: Wait for Kafka Deployment
   kubernetes.core.k8s_info:
     kind: Deployment
     wait: yes

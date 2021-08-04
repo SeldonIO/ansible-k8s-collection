@@ -5,3 +5,6 @@
 - name: Install Kafka
   include: install.yaml
 
+- name: Install metrics
+  include: metrics.yaml
+  when: kafka_create_metrics | bool

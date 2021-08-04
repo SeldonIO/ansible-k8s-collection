@@ -1,7 +1,10 @@
 kafka_namespace: kafka
-
 kafka_install_url: https://strimzi.io/install/latest?namespace=kafka
-
 kafka_create_cluster: true
-
-kafka_replicas: 1
+kafka_create_metrics: true
+kafka_replicas: 3
+kafka_listener_type: loadbalancer
+kafka_prometheus_rules_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/prometheus-install/prometheus-rules.yaml
+kafka_grafana_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/grafana-install/grafana.yaml
+kafka_prometheus_rules_secret_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/prometheus-additional-properties/prometheus-additional.yaml
+kafka_grafana_version: 6.14.1

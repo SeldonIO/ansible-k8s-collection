@@ -1,0 +1,14 @@
+adminUser: admin
+adminPassword: admin
+sidecar:
+  dashboards:
+    enabled: true
+    label: kafka_dashboard
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: DS_PROMETHEUS
+      type: prometheus
+      url: http://prometheus-operated.kafka:9090
+      access: proxy
