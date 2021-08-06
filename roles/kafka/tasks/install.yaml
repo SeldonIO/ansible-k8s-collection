@@ -27,3 +27,17 @@
     template: templates/cluster.yaml.j2
   when: kafka_create_cluster | bool
 
+- name: Wait for Kafka Cluster 
+  kubernetes.core.k8s:
+    state: present
+    kind: Kafka
+    api_version: v1beta2
+    wait: yes
+    wait_sleep: 10
+    wait_condition:
+      type: Ready
+      status: "True"
+    name: "{{ kafka_cluster_name }}"
+    namespace: "{{ kafka_namespace }}"
+    wait_timeout: 360
+
