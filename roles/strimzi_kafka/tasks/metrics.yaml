@@ -36,7 +36,7 @@
 
 - name: Load Grafana Dashboards
   set_fact:
-    my_data: "{{ mydata | default({}) | combine({ item | basename : lookup('file', item) }) }}"
+    dashboards: "{{ dashboards | default({}) | combine({ item | basename : lookup('file', item) }) }}"
   with_fileglob: "config/*"
 
 - name: Create Grafana Dashboards Config Map
@@ -50,7 +50,7 @@
         namespace: "{{ kafka_namespace }}"
         labels:
           kafka_dashboard: "1"
-      data: "{{ my_data }}"
+      data: "{{ dashboards }}"
         
 - name: Install Grafana
   kubernetes.core.helm:
