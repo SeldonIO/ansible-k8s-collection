@@ -1,11 +1,11 @@
-kafka_cluster_name: seldon
-kafka_namespace: kafka
-kafka_install_url: https://strimzi.io/install/latest?namespace={{ kafka_namespace }}
-kafka_create_cluster: true
-kafka_create_metrics: true
-kafka_replicas: 3
-kafka_listener_type: loadbalancer
-kafka_prometheus_rules_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/prometheus-install/prometheus-rules.yaml
-kafka_grafana_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/grafana-install/grafana.yaml
-kafka_prometheus_rules_secret_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/prometheus-additional-properties/prometheus-additional.yaml
-kafka_grafana_version: 6.14.1
+strimzi_kafka_cluster_name: seldon
+strimzi_kafka_namespace: kafka
+strimzi_kafka_install_url: "https://strimzi.io/install/latest?namespace={{ strimzi_kafka_namespace }}"
+strimzi_kafka_create_cluster: true
+strimzi_kafka_create_metrics: true
+strimzi_kafka_replicas: 3
+strimzi_kafka_listener_type: loadbalancer
+strimzi_kafka_prometheus_rules_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/prometheus-install/prometheus-rules.yaml
+strimzi_kafka_grafana_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/grafana-install/grafana.yaml
+strimzi_kafka_prometheus_rules_secret_url: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/examples/metrics/prometheus-additional-properties/prometheus-additional.yaml
+strimzi_kafka_grafana_version: 6.14.1
