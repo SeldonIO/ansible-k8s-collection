@@ -1,0 +1,65 @@
+---
+- name: Install Prometheus Operator
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ strimzi_kafka_namespace }}"
+    template: templates/prometheus-operator-deployment.yaml.j2
+
+
+- name: Create Prometheus Additional Rules Secret
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ strimzi_kafka_namespace }}"    
+    definition: "{{ lookup('url', item, split_lines=False) }}"
+  with_items:
+    - "{{ strimzi_kafka_prometheus_rules_secret_url }}"
+
+- name: Create Prometheus
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ strimzi_kafka_namespace }}"
+    template: templates/prometheus.yaml.j2
+
+- name: Create Pod Monitor
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ strimzi_kafka_namespace }}"
+    template: templates/strimzi-pod-monitor.yaml.j2
+
+- name: Create Prometheus Rules
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ strimzi_kafka_namespace }}"    
+    definition: "{{ lookup('url', item, split_lines=False) }}"
+  with_items:
+    - "{{ strimzi_kafka_prometheus_rules_url }}"
+
+- name: Load Grafana Dashboards
+  set_fact:
+    dashboards: "{{ dashboards | default({}) | combine({ item | basename : lookup('file', item) }) }}"
+  with_fileglob: "config/*"
+
+- name: Create Grafana Dashboards Config Map
+  community.kubernetes.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: kafka-dashboard
+        namespace: "{{ strimzi_kafka_namespace }}"
+        labels:
+          kafka_dashboard: "1"
+      data: "{{ dashboards }}"
+        
+- name: Install Grafana
+  kubernetes.core.helm:
+    name: kafka-grafana
+    release_namespace: "{{ strimzi_kafka_namespace }}"
+    chart_repo_url: "https://grafana.github.io/helm-charts"
+    chart_ref: "grafana"
+    chart_version: "{{ strimzi_kafka_grafana_version }}"
+    values: "{{ lookup('template', 'grafana-values.yaml') | from_yaml }}"
+                              
+
+  
