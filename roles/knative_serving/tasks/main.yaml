@@ -4,8 +4,8 @@
     state: present
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
-    - "{{ knative_crds }}"
-    - "{{ knative_core }}"
+    - "{{ knative_serving_crds }}"
+    - "{{ knative_serving_core }}"
 
 
 - name: Wait for KNative Serving deployments (CRDS and Core)
@@ -29,7 +29,7 @@
 - name: Install Knative (Istio Networking)
   kubernetes.core.k8s:
     state: present
-    definition: "{{ lookup('url', knative_net_istio, split_lines=False) }}"
+    definition: "{{ lookup('url', knative_serving_net_istio, split_lines=False) }}"
 
 
 - name: Wait for KNative Serving deployments (Istio Networking)

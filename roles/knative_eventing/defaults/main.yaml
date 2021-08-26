@@ -1,8 +1,11 @@
 ---
-knative_eventing_crds: "https://github.com/knative/eventing/releases/download/v0.22.0/eventing-crds.yaml"
-knative_eventing_core: "https://github.com/knative/eventing/releases/download/v0.22.0/eventing-core.yaml"
-knative_eventing_channel: "https://github.com/knative/eventing/releases/download/v0.22.0/in-memory-channel.yaml"
-knative_eventing_broker: "https://github.com/knative/eventing/releases/download/v0.22.0/mt-channel-broker.yaml"
+knative_eventing_version: v0.22.0
+knative_eventing_download_url: "https://github.com/knative/eventing/releases/download"
+
+knative_eventing_crds: "{{ knative_eventing_download_url }}/{{ knative_eventing_version }}/eventing-crds.yaml"
+knative_eventing_core: "{{ knative_eventing_download_url }}/{{ knative_eventing_version }}/eventing-core.yaml"
+knative_eventing_channel: "{{ knative_eventing_download_url }}/{{ knative_eventing_version }}/in-memory-channel.yaml"
+knative_eventing_broker: "{{ knative_eventing_download_url }}/{{ knative_eventing_version }}/mt-channel-broker.yaml"
 
 knative_eventing_wait_for_deployments: true
 
