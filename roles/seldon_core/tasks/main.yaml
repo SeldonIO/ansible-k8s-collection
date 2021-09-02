@@ -7,6 +7,7 @@
     version: "{{ seldon_core_version }}"
     repo: "{{ seldon_core_repo }}"
     dest: "{{ inventory_dir }}/.resources/seldon-core"
+    force: yes
   when: seldon_core_source_dir is undefined
 
 - name: Set Seldon Core Directory

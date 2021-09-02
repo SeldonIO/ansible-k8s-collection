@@ -4,6 +4,7 @@
     version: "{{ iter8_version }}"
     repo: "{{ iter8_repo }}"
     dest: "{{ inventory_dir }}/.resources/iter8"
+    force: yes
   when: iter8_source_dir is undefined
 
 - name: Set Iter8 Directory
