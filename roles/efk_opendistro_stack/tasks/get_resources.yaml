@@ -4,3 +4,4 @@
     version: "{{ elastic_opendistro_version }}"
     repo: "{{ elastic_opendistro_repo }}"
     dest: "{{ inventory_dir }}/.resources/opendistro-build"
+    force: yes
