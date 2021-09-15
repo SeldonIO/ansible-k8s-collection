@@ -19,12 +19,23 @@
         namespace: kfserving-system
       data:
         ingress: |-
-                {
-                  "ingressGateway" : "knative-ingress-gateway.knative-serving",
-                  "ingressService" : "istio-ingressgateway.istio-system.svc.cluster.local",
-                  "localGateway" : "knative-local-gateway.knative-serving",
-                  "localGatewayService" : "knative-local-gateway.istio-system.svc.cluster.local"
-                }
+          {
+            "ingressGateway" : "istio-system/seldon-gateway",
+            "ingressService" : "istio-ingressgateway.istio-system.svc.cluster.local",
+            "localGateway" : "knative-local-gateway.knative-serving",
+            "localGatewayService" : "knative-local-gateway.istio-system.svc.cluster.local"
+          }
+
+        logger: |-
+          {
+            "image" : "kfserving/agent:v0.6.1",
+            "memoryRequest": "100Mi",
+            "memoryLimit": "1Gi",
+            "cpuRequest": "100m",
+            "cpuLimit": "1",
+            "defaultUrl": "http://broker-ingress.knative-eventing.svc.cluster.local/seldon-logs/default"
+          }
+
 
 - name: Wait for KFServing Controller Manager
   kubernetes.core.k8s_info:

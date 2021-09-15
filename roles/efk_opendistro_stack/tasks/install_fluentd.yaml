@@ -6,7 +6,7 @@
     chart_ref: fluentd-elasticsearch
     chart_repo_url: https://kiwigrid.github.io
     chart_version: "{{ fluentd_chart_version }}"
-    values: "{{ flutend_values }}"
+    values: "{{ fluentd_values }}"
 
 - name: Wait for Fluentd deployments
   kubernetes.core.k8s_info:
