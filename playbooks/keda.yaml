@@ -1,0 +1,5 @@
+---
+- name: Install Keda
+  hosts: localhost
+  roles:
+    - keda

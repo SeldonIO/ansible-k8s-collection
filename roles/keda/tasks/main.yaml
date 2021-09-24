@@ -1,0 +1,7 @@
+---
+- name: Create Namespaces
+  include: namespaces.yaml
+
+- name: Install KEDA
+  include: install.yaml
+

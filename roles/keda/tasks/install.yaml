@@ -1,0 +1,8 @@
+---
+- name: Install KEDA
+  kubernetes.core.helm:
+    name: keda
+    release_namespace: "{{ keda_namespace }}"
+    chart_ref: "keda"
+    chart_version: "{{ keda_chart_version }}"
+    chart_repo_url: "https://kedacore.github.io/charts"
