@@ -6,11 +6,3 @@ knative_serving_core: "https://github.com/knative/serving/releases/download/{{ k
 knative_serving_net_istio: "https://github.com/knative/net-istio/releases/download/{{ knative_serving_version }}/net-istio.yaml"
 
 knative_serving_wait_for_deployments: true
-knative_serving_wait_for_deployments_core_list:
-  - activator
-  - autoscaler
-  - controller
-  - webhook
-knative_serving_wait_for_deployments_net_list:
-  - net-istio-webhook
-  - net-istio-controller

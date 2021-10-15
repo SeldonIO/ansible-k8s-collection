@@ -19,6 +19,26 @@
     - "{{ knative_eventing_broker }}"
   when: knative_eventing_workaround_issue_189 | bool
 
+
+- name: Sleep for 5 seconds to give deployments time to appear
+  wait_for:
+    timeout: 5
+  when: knative_eventing_wait_for_deployments | bool
+
+- name: Get list of deployments in knative eventing namespace
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Deployment
+    namespace: knative-eventing
+  register: knative_eventing_deployments
+  when: knative_eventing_wait_for_deployments | bool
+
+- name: Extract names of deployments in knative seriving namespace
+  set_fact:
+    knative_eventing_deployment_names: "{{ knative_eventing_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
+  when: knative_eventing_wait_for_deployments | bool
+
+
 - name: Wait for KNative Eventing deployments
   kubernetes.core.k8s_info:
     kind: Deployment
@@ -30,22 +50,8 @@
     name: "{{ item }}"
     namespace: knative-eventing
     wait_timeout: 360
-  with_items: "{{ knative_eventing_wait_for_deployments_list }}"
+  with_items: "{{ knative_eventing_deployment_names }}"
   when: knative_eventing_wait_for_deployments | bool
-
-- name: Add tag resolution disabled repositories
-  kubernetes.core.k8s:
-    kind: ConfigMap
-    name: config-deployment
-    namespace: knative-serving
-    definition:
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: config-deployment
-        namespace: knative-serving
-      data:
-        registriesSkippingTagResolving: kind.local,ko.local,dev.local
 
 - name: Create default broker
   include: create_broker.yaml

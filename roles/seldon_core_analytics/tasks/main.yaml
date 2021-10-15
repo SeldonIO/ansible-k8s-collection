@@ -21,6 +21,28 @@
     chart_version: "{{ seldon_core_analytics_version }}"
     values: "{{ seldon_core_analytics_values }}"
 
+
+- name: Sleep for 5 seconds to give deployments time to appear
+  wait_for:
+    timeout: 5
+  when: seldon_core_analytics_wait_for_deployments | bool
+
+- name: Get list of deployments for Seldon Core Analytics
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Deployment
+    namespace: "{{ seldon_system_namespace }}"
+    label_selectors:
+      app.kubernetes.io/instance = seldon-core-analytics
+  register: seldon_core_analytics_deployments
+  when: seldon_core_analytics_wait_for_deployments | bool
+
+- name: Extract names of deployments for Seldon Core Analytics
+  set_fact:
+    seldon_core_analytics_deployments_names: "{{ seldon_core_analytics_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
+  when: seldon_core_analytics_wait_for_deployments | bool
+
+
 - name: Wait for Seldon Core Analytics Deployments
   kubernetes.core.k8s_info:
     kind: Deployment
@@ -32,10 +54,5 @@
     name: "{{ item }}"
     namespace: "{{ seldon_system_namespace }}"
     wait_timeout: 360
-  with_items:
-    - seldon-core-analytics-grafana
-    - seldon-core-analytics-kube-state-metrics
-    - seldon-core-analytics-prometheus-alertmanager
-    - seldon-core-analytics-prometheus-pushgateway
-    - seldon-core-analytics-prometheus-seldon
+  with_items: "{{ seldon_core_analytics_deployments_names }}"
   when: seldon_core_analytics_wait_for_deployments | bool
