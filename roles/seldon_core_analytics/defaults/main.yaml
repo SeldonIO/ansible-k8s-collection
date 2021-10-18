@@ -3,5 +3,6 @@ seldon_system_namespace: seldon-system
 seldon_core_analytics_version: null
 seldon_core_analytics_values: {}
 seldon_core_analytics_wait_for_deployments: true
+seldon_core_analytics_istio_external_ip_required: false
 
 seldon_core_analytics_extra_templates: []

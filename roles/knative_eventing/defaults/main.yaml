@@ -16,13 +16,3 @@ knative_eventing_wait_for_deployments: true
 knative_eventing_create_default_broker: false
 knative_eventing_default_broker_name: default
 knative_eventing_default_broker_namespace: default
-
-knative_eventing_wait_for_deployments_list:
-  - eventing-controller
-  - eventing-webhook
-  - imc-controller
-  - imc-dispatcher
-  - mt-broker-controller
-  - mt-broker-filter
-  - mt-broker-ingress
-  - pingsource-mt-adapter
