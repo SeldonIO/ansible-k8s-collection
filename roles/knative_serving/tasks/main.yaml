@@ -21,7 +21,7 @@
   register: knative_serving_deployments
   when: knative_serving_wait_for_deployments | bool
 
-- name: Extract names of deployments in knative seriving namespace
+- name: Extract names of deployments in knative serving namespace
   set_fact:
     knative_serving_deployment_names: "{{ knative_serving_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
   when: knative_serving_wait_for_deployments | bool
