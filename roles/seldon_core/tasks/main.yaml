@@ -6,12 +6,13 @@
   ansible.builtin.git:
     version: "{{ seldon_core_version }}"
     repo: "{{ seldon_core_repo }}"
-    dest: "{{ inventory_dir }}/.resources/seldon-core"
+    dest: "{{ seldon_cache_directory }}/seldon-core"
     force: yes
   when: seldon_core_source_dir is undefined
 
 - name: Set Seldon Core Directory
-  set_fact: seldon_core_source_dir="{{ inventory_dir }}/.resources/seldon-core"
+  set_fact:
+    seldon_core_source_dir: "{{ seldon_cache_directory }}/seldon-core"
   when: seldon_core_source_dir is undefined
 
 - name: Deploy Seldon Core

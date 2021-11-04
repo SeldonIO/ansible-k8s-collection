@@ -1,4 +1,6 @@
 ---
+seldon_cache_directory: "{{ ansible_env.HOME }}/.cache/seldon"
+
 istio_version: 1.10.3
 istio_verify_install: true
 istio_create_seldon_gateway: true

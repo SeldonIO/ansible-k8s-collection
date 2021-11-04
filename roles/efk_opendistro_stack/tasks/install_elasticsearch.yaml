@@ -3,7 +3,7 @@
   kubernetes.core.helm:
     name: elasticsearch
     release_namespace: "{{ elastic_opendistro_namespace }}"
-    chart_ref: "{{ inventory_dir }}/.resources/opendistro-build/helm/opendistro-es"
+    chart_ref: "{{ seldon_cache_directory }}/opendistro-build/helm/opendistro-es"
     values: "{{ elastic_opendistro_values }}"
 
 - name: Wait for Elasticsearch deployments

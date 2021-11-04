@@ -3,6 +3,6 @@
   kubernetes.core.helm:
     name: postgres-operator
     release_namespace: "{{ postgres_operator_namespace }}"
-    chart_ref: "{{ inventory_dir }}/.resources/postgres-operator/charts/postgres-operator"
+    chart_ref: "{{ seldon_cache_directory }}/postgres-operator/charts/postgres-operator"
     values: "{{ postgres_operator_values }}"
     values_files: "{{ postgres_operator_values_files }}"
