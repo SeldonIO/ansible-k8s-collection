@@ -8,7 +8,8 @@
   when: iter8_source_dir is undefined
 
 - name: Set Iter8 Directory
-  set_fact: iter8_source_dir="{{ seldon_cache_directory }}/iter8"
+  set_fact:
+    iter8_source_dir: "{{ seldon_cache_directory }}/iter8"
   when: iter8_source_dir is undefined
 
 - name: Install Iter8

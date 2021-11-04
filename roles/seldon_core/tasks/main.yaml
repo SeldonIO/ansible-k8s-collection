@@ -11,7 +11,8 @@
   when: seldon_core_source_dir is undefined
 
 - name: Set Seldon Core Directory
-  set_fact: seldon_core_source_dir="{{ seldon_cache_directory }}/seldon-core"
+  set_fact:
+    seldon_core_source_dir: "{{ seldon_cache_directory }}/seldon-core"
   when: seldon_core_source_dir is undefined
 
 - name: Deploy Seldon Core
