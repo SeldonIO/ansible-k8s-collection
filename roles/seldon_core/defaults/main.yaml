@@ -1,4 +1,6 @@
 ---
+seldon_cache_directory: "{{ ansible_env.HOME }}/.cache/seldon"
+
 seldon_system_namespace: seldon-system
 seldon_core_version: master
 

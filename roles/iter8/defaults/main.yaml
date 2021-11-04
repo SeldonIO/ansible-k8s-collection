@@ -1,4 +1,6 @@
 ---
+seldon_cache_directory: "{{ ansible_env.HOME }}/.cache/seldon"
+
 iter8_namespace: iter8-system
 iter8_version: master
 

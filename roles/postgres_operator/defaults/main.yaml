@@ -1,4 +1,6 @@
 ---
+seldon_cache_directory: "{{ ansible_env.HOME }}/.cache/seldon"
+
 postgres_operator_namespace: postgres
 
 postgres_operator_repo: https://github.com/zalando/postgres-operator.git
