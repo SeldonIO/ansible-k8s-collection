@@ -5,7 +5,7 @@
   register: istio_directory
 
 
-- name: "Create .resources directory if does not exist: {{ seldon_cache_directory }}/"
+- name: "Create resources directory if does not exist: {{ seldon_cache_directory }}/"
   ansible.builtin.file:
     path: "{{ seldon_cache_directory }}/"
     state: directory
