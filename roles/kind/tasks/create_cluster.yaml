@@ -7,7 +7,7 @@
 - name: "Start KinD Cluster: '{{ kind_cluster_name }}'"
   command:
     argv:
-      - "{{ inventory_dir }}/.resources/kind-{{ kind_version }}"
+      - "{{ seldon_cache_directory }}/kind-{{ kind_version }}"
       - create
       - cluster
       - --name={{ kind_cluster_name }}
@@ -24,7 +24,7 @@
 - name: "Export kubeconfig for KinD Cluster: '{{ kind_cluster_name }}'"
   command:
     argv:
-      - "{{ inventory_dir }}/.resources/kind-{{ kind_version }}"
+      - "{{ seldon_cache_directory }}/kind-{{ kind_version }}"
       - export
       - kubeconfig
       - --name={{ kind_cluster_name }}

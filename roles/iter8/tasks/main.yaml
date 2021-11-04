@@ -3,16 +3,16 @@
   ansible.builtin.git:
     version: "{{ iter8_version }}"
     repo: "{{ iter8_repo }}"
-    dest: "{{ inventory_dir }}/.resources/iter8"
+    dest: "{{ seldon_cache_directory }}/iter8"
     force: yes
   when: iter8_source_dir is undefined
 
 - name: Set Iter8 Directory
-  set_fact: iter8_source_dir="{{ inventory_dir }}/.resources/iter8"
+  set_fact: iter8_source_dir="{{ seldon_cache_directory }}/iter8"
   when: iter8_source_dir is undefined
 
 - name: Install Iter8
-  ansible.builtin.shell: "kustomize build {{ inventory_dir }}/.resources/iter8/install/core | kubectl apply -n {{ iter8_namespace }} -f -"
+  ansible.builtin.shell: "kustomize build {{ seldon_cache_directory }}/iter8/install/core | kubectl apply -n {{ iter8_namespace }} -f -"
 
 - name: Wait for Iter8 deployments
   kubernetes.core.k8s_info:
