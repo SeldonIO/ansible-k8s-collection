@@ -1,6 +1,6 @@
 namespace: "seldonio"
 name: "k8s"
-version: "0.3.1"
+version: "0.3.1-dev"
 readme: "README.md"
 authors:
     - "Seldon Technologies Ltd. <hello@seldon.io>"
