@@ -4,7 +4,7 @@
     name: fluentd
     release_namespace: "{{ elastic_opendistro_namespace }}"
     chart_ref: fluentd-elasticsearch
-    chart_repo_url: https://kiwigrid.github.io
+    chart_repo_url: https://kokuwaio.github.io/helm-charts
     chart_version: "{{ fluentd_chart_version }}"
     values: "{{ fluentd_values }}"
 
