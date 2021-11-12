@@ -34,35 +34,19 @@
     values_files: "{{ gitea_values_files }}"
 
 
-- name: Wait for Gitea pods
-  kubernetes.core.k8s_info:
-    kind: Pod
-    name: "{{ item }}"
-    namespace: "{{ gitea_namespace }}"
-    wait: yes
-    wait_timeout: 600
-    wait_condition:
-      type: Ready
-      status: "True"
+- name: Wait for Gitea StatefulSets
+  shell: "kubectl rollout status -n {{ gitea_namespace }} statefulsets/{{ item }}"
   with_items:
-    - gitea-postgresql-0
-    - gitea-0
+    - gitea-postgresql
+    - gitea
   when: gitea_wait_for_deployments | bool
 
 
 - name: Wait for Gitea deployments (memcached)
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    name: "{{ item }}"
-    namespace: "{{ gitea_namespace }}"
-    wait: yes
-    wait_timeout: 600
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
+  shell: "kubectl rollout status -n {{ gitea_namespace }} deploy/{{ item }}"
   with_items:
     - gitea-memcached
+  when: gitea_wait_for_deployments | bool
 
 
 - name: Get an existing Service object

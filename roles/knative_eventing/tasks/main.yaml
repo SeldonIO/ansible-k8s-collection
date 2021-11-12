@@ -38,18 +38,8 @@
     knative_eventing_deployment_names: "{{ knative_eventing_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
   when: knative_eventing_wait_for_deployments | bool
 
-
-- name: Wait for KNative Eventing deployments
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: knative-eventing
-    wait_timeout: 360
+- name: Wait for Knative Eventing deployments
+  shell: "kubectl rollout status -n knative-eventing deploy/{{ item }}"
   with_items: "{{ knative_eventing_deployment_names }}"
   when: knative_eventing_wait_for_deployments | bool
 

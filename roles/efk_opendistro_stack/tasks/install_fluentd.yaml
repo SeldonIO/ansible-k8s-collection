@@ -8,19 +8,8 @@
     chart_version: "{{ fluentd_chart_version }}"
     values: "{{ fluentd_values }}"
 
-- name: Wait for Fluentd deployments
-  kubernetes.core.k8s_info:
-    kind: DaemonSet
-    wait: yes
-    #TODO: I couldn't figure out the best waiting conditions for daemonset
-    #      If this will start causing problem this may require revisit
-    # wait_condition:
-    #   type: Available
-    #   status: "True"
-    #   reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: "{{ elastic_opendistro_namespace }}"
-    wait_timeout: 360
+- name: Wait for Fluentd DaemonSet
+  shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} daemonset/{{ item }}"
   with_items:
     - fluentd-fluentd-elasticsearch
   when: fluentd_wait_for_deployments | bool
