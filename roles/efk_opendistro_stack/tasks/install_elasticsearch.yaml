@@ -7,16 +7,7 @@
     values: "{{ elastic_opendistro_values }}"
 
 - name: Wait for Elasticsearch deployments
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: "{{ elastic_opendistro_namespace }}"
-    wait_timeout: 500
+  shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} deploy/{{ item }}"
   with_items:
     - elasticsearch-opendistro-es-client
     - elasticsearch-opendistro-es-kibana

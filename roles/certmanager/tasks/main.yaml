@@ -7,16 +7,7 @@
     - "{{ certmanager_yaml }}"
 
 - name: Wait for cert-manager pods become ready
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    name: "{{ item }}"
-    namespace: cert-manager
-    wait: yes
-    wait_timeout: 600
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
+  shell: "kubectl rollout status -n cert-manager deploy/{{ item }}"
   with_items:
     - cert-manager
     - cert-manager-cainjector
