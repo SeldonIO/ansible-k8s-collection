@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: seldon-deploy-cert
+  namespace: istio-system
+spec:
+  secretName: seldon-deploy-cert-tls
+  issuerRef:
+    name: letsencrypt-prod
+  commonName: {{ certmanager_certificate_domain }}
+  dnsNames:
+  - {{ certmanager_certificate_domain }}

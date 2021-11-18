@@ -3,3 +3,10 @@ certmanager_version: v1.0.4
 certmanager_yaml: "https://github.com/jetstack/cert-manager/releases/download/{{ certmanager_version }}/cert-manager.yaml"
 
 certmanager_wait_for_deployments: true
+
+certmaner_use_letsencrypt: false
+certmanager_certificate_email: ""
+certmanager_certificate_domain: ""
+
+certmanager_issuer_yaml: "{{ lookup('template', 'default-seldon-cert-issuer.yaml.j2') | from_yaml }}"
+certmanager_certificate_yaml: "{{ lookup('template', 'default-seldon-certificate.yaml.j2') | from_yaml }}"

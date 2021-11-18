@@ -13,3 +13,7 @@
     - cert-manager-cainjector
     - cert-manager-webhook
   when: certmanager_wait_for_deployments | bool
+
+- name: Configure Letsencrypt certificates
+  include: letsencrypt.yaml
+  when: certmaner_use_letsencrypt | bool
