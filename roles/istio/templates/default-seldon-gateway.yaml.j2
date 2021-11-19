@@ -22,11 +22,11 @@ spec:
       name: https
       protocol: HTTPS
     tls:
-      {% if istio_self_signed_certs | bool %}
+{% if istio_self_signed_certs | bool %}
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
       privateKey: /etc/istio/ingressgateway-certs/tls.key
-      {% else %}
+{% else %}
       credentialName: "{{ istio_ingress_cert_secret }}"
-      {% endif %}
+{% endif %}
       mode: SIMPLE
 {% endif %}
