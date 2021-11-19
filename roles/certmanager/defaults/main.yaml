@@ -4,7 +4,7 @@ certmanager_yaml: "https://github.com/jetstack/cert-manager/releases/download/{{
 
 certmanager_wait_for_deployments: true
 
-certmaner_use_letsencrypt: false
+certmanager_use_letsencrypt: false
 certmanager_certificate_email: ""
 certmanager_certificate_domain: ""
 

@@ -16,4 +16,4 @@
 
 - name: Configure Letsencrypt certificates
   include: letsencrypt.yaml
-  when: certmaner_use_letsencrypt | bool
+  when: certmanager_use_letsencrypt | bool

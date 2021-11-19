@@ -7,6 +7,6 @@ istio_create_seldon_gateway: true
 
 istio_use_ssl: false
 istio_self_signed_certs: false
-istio_ingress_cert_secret: ""
+istio_ingress_cert_secret: "seldon-deploy-cert-tls"
 
 istio_seldon_gateway: "{{ lookup('template', 'default-seldon-gateway.yaml.j2') | from_yaml }}"

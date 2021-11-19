@@ -1,6 +1,3 @@
-- name: Pause to configure DNS records
-  pause:
-
 - name: Create LetsEncrypt Issuer
   kubernetes.core.k8s:
     state: present
