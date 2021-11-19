@@ -1,5 +1,5 @@
 ---
-- name: Check if Istio {{ istio_version }} already downloaded.
+- name: Check if Istio {{ istio_version }} already downloaded
   stat:
     path: "{{ seldon_cache_directory }}/istio-{{ istio_version }}"
   register: istio_directory
