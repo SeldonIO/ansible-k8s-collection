@@ -15,10 +15,20 @@
   register: istio_web_service
   when: seldon_core_analytics_istio_external_ip_required | bool
 
-- name: "Set fact about Instio Ingress Gateway External IP"
+- name: Set fact about Istio Ingress Gateway External IP
   set_fact:
     istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
   when: seldon_core_analytics_istio_external_ip_required | bool
+
+- name: Set fact about external address when dns not enabled
+  set_fact:
+    external_address: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+  when: not configure_dns | bool
+
+- name: Set fact about external address when dns enabled
+  set_fact:
+    external_address: "{{seldon_deploy_cluster_name}}.cloud.seldon.io"
+  when: configure_dns | bool
 
 - name: Create Extra Resources
   kubernetes.core.k8s:
@@ -34,7 +44,6 @@
     chart_ref: "seldon-core-analytics"
     chart_version: "{{ seldon_core_analytics_version }}"
     values: "{{ seldon_core_analytics_values }}"
-
 
 - name: Sleep for 5 seconds to give deployments time to appear
   wait_for:
@@ -55,7 +64,6 @@
   set_fact:
     seldon_core_analytics_deployments_names: "{{ seldon_core_analytics_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
   when: seldon_core_analytics_wait_for_deployments | bool
-
 
 - name: Wait for Seldon Core Analytics Deployments
   shell: "kubectl rollout status -n {{ seldon_system_namespace }} deploy/{{ item }}"
