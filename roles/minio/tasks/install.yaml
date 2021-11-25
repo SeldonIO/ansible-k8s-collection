@@ -11,6 +11,7 @@
       rootPassword: "{{ minio_secret_key }}"
       service:
         type: "{{ minio_service_type }}"
+      mode: standalone
 
 - name: Echo message about client configuration
   ansible.builtin.debug:
