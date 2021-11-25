@@ -1,6 +1,6 @@
 ---
 minio_namespace: minio-system
-minio_chart_version: 8.0.10
+minio_chart_version: '3.2.0'
 
 minio_access_key: minioadmin
 minio_secret_key: minioadmin
