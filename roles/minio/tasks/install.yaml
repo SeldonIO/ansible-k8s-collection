@@ -5,12 +5,13 @@
     release_namespace: "{{ minio_namespace }}"
     chart_ref: "minio"
     chart_version: "{{ minio_chart_version }}"
-    chart_repo_url: "https://helm.min.io/"
+    chart_repo_url: "https://charts.min.io/"
     values:
-      accessKey: "{{ minio_access_key }}"
-      secretKey: "{{ minio_secret_key }}"
+      rootUser: "{{ minio_access_key }}"
+      rootPassword: "{{ minio_secret_key }}"
       service:
         type: "{{ minio_service_type }}"
+      mode: standalone
 
 - name: Echo message about client configuration
   ansible.builtin.debug:
