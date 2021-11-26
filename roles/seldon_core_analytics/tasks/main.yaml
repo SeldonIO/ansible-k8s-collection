@@ -6,35 +6,13 @@
     kind: Namespace
     state: present
 
-- name: Get information about Ingress Gateway
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    name: istio-ingressgateway
-    namespace: istio-system
-  register: istio_web_service
-  when: seldon_core_analytics_istio_external_ip_required | bool
-
-- name: Set fact about Istio Ingress Gateway External IP
-  set_fact:
-    istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
-  when: seldon_core_analytics_istio_external_ip_required | bool
-
-- name: Set fact about external address when dns not enabled
-  set_fact:
-    external_address: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
-  when: not configure_dns | bool
-
-- name: Set fact about external address when dns enabled
-  set_fact:
-    external_address: "{{seldon_deploy_cluster_name}}.cloud.seldon.io"
-  when: configure_dns | bool
-
 - name: Create Extra Resources
   kubernetes.core.k8s:
     namespace: "{{ seldon_system_namespace }}"
     definition: "{{ item }}"
   with_items: "{{ seldon_core_analytics_extra_resources }}"
+  loop_control:
+    label: "{{ item.metadata.name }}"
 
 - name: Install Seldon Core Analytics
   kubernetes.core.helm:
