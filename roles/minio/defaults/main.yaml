@@ -6,7 +6,7 @@ minio_access_key: minioadmin
 minio_secret_key: minioadmin
 
 minio_secret_namespaces: []
-minio_rclone_secret_name: seldon-rclone-secret
+minio_rclone_secret_name: minio-bucket
 minio_kfserving_secret_name: null
 
 minio_service_type: ClusterIP
