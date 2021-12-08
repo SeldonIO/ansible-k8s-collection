@@ -84,7 +84,7 @@
   when: repo_data.status == 404
 
 
-- name: Configure GiTea VirtualService
+- name: Configure Gitea VirtualService
   kubernetes.core.k8s:
     state: present
     template: templates/gitea-vs.yaml.j2
