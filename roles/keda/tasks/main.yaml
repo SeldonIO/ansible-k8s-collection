@@ -1,7 +1,7 @@
 ---
 - name: Create Namespaces
-  include: namespaces.yaml
+  import_tasks: namespaces.yaml
 
 - name: Install KEDA
-  include: install.yaml
+  import_tasks: install.yaml
 

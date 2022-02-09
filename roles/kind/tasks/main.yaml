@@ -1,14 +1,14 @@
 ---
 - name: Get Kind Binary
-  include: download_kind.yaml
+  import_tasks: download_kind.yaml
   when: kind_download_cli | bool
 
 - name: Create Kind Cluster
-  include: create_cluster.yaml
+  import_tasks: create_cluster.yaml
 
 - name: Create and set default namespace
-  include: default_namespace.yaml
+  import_tasks: default_namespace.yaml
 
 - name: Deploy metrics server
-  include: metrics_server.yaml
+  import_tasks: metrics_server.yaml
   when: kind_deploy_metrics_server | bool
