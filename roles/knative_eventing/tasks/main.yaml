@@ -1,24 +1,6 @@
 ---
-- name: Install Knative Eventing
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ lookup('url', item, split_lines=False) }}"
-  with_items:
-    - "{{ knative_eventing_crds }}"
-    - "{{ knative_eventing_core }}"
-    - "{{ knative_eventing_channel }}"
-    - "{{ knative_eventing_broker }}"
-  when: (knative_eventing_workaround_issue_189 | bool) == false
-
-- name: Install Knative Eventing (direct kubectl to workaround issue 189)
-  shell: "kubectl apply -f {{ item }}"
-  with_items:
-    - "{{ knative_eventing_crds }}"
-    - "{{ knative_eventing_core }}"
-    - "{{ knative_eventing_channel }}"
-    - "{{ knative_eventing_broker }}"
-  when: knative_eventing_workaround_issue_189 | bool
-
+- name: "Install Knative Eventing"
+  import_tasks: install.yaml
 
 - name: Sleep for 5 seconds to give deployments time to appear
   wait_for:
