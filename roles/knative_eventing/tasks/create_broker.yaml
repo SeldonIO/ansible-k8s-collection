@@ -14,7 +14,7 @@
   shell: "kubectl rollout status -n knative-eventing deploy/{{ item }}"
   with_items: "{{ knative_eventing_deployment_names }}"
 
-- name: "Create a k8s namespace {{ knative_eventing_default_broker_namespace }} "
+- name: "Create k8s namespace for default broker"
   kubernetes.core.k8s:
     name: "{{ knative_eventing_default_broker_namespace }}"
     api_version: v1
