@@ -22,7 +22,7 @@
     state: present
   when: knative_eventing_create_default_broker | bool
 
-- name: Create default broker
+- name: "Create default broker"
   kubernetes.core.k8s:
     state: present
     definition:
