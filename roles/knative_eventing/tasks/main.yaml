@@ -44,5 +44,5 @@
   when: knative_eventing_wait_for_deployments | bool
 
 - name: Create default broker
-  include: create_broker.yaml
+  import_tasks: create_broker.yaml
   when: knative_eventing_create_default_broker | bool

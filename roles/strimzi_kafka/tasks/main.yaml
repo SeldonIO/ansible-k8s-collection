@@ -1,14 +1,14 @@
 ---
 - name: Create Namespaces
-  include: namespaces.yaml
+  import_tasks: namespaces.yaml
 
 - name: Install Kafka Operator
-  include: install.yaml
+  import_tasks: install.yaml
 
 - name: Create Kafka Cluster
-  include: cluster.yaml
+  import_tasks: cluster.yaml
   when: strimzi_kafka_create_cluster | bool
 
 - name: Install metrics
-  include: metrics.yaml
+  import_tasks: metrics.yaml
   when: strimzi_kafka_create_metrics | bool

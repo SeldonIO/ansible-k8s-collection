@@ -41,5 +41,5 @@
 
 
 - name: Configure certificates
-  include: certificates.yaml
+  import_tasks: certificates.yaml
   when: istio_self_signed_certs | bool

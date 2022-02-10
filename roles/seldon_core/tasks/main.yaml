@@ -1,6 +1,6 @@
 ---
 - name: Create Namespaces
-  include: namespaces.yaml
+  import_tasks: namespaces.yaml
 
 - name: Git clone Seldon Core repo and checkout {{ seldon_core_version }}
   ansible.builtin.git:

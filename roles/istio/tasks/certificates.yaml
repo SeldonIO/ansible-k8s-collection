@@ -26,7 +26,7 @@
   register: tmp_cert_dir
 
 - name: Generate Self Signed Server SSL Certs from Self Signed CA
-  include: self_signed.yaml
+  import_tasks: self_signed.yaml
 
 - name: Set fact about Server SSL Certs Paths
   set_fact:
