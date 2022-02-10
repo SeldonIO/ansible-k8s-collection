@@ -2,29 +2,16 @@
 - name: "Install Knative Eventing"
   import_tasks: install.yaml
 
-- name: Sleep for 5 seconds to give deployments time to appear
+- name: "Sleep for 5 seconds to give deployments time to appear"
   wait_for:
     timeout: 5
   when: knative_eventing_wait_for_deployments | bool
 
-- name: Get list of deployments in knative eventing namespace
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Deployment
-    namespace: knative-eventing
-  register: knative_eventing_deployments
-  when: knative_eventing_wait_for_deployments | bool
-
-- name: Extract names of deployments in knative seriving namespace
-  set_fact:
-    knative_eventing_deployment_names: "{{ knative_eventing_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
-  when: knative_eventing_wait_for_deployments | bool
-
-- name: Wait for Knative Eventing deployments
-  shell: "kubectl rollout status -n knative-eventing deploy/{{ item }}"
-  with_items: "{{ knative_eventing_deployment_names }}"
-  when: knative_eventing_wait_for_deployments | bool
-
-- name: Create default broker
+- name: "Install broker (synchronous)"
   import_tasks: create_broker.yaml
-  when: knative_eventing_create_default_broker | bool
+  when: knative_eventing_wait_for_deployments | bool
+
+- name: "Install broker (asynchronous)"
+  command: "true"
+  notify: "create Knative Eventing broker"
+  when: not (knative_eventing_wait_for_deployments | bool)
