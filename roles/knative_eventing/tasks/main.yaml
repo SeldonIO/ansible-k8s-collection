@@ -13,5 +13,5 @@
 
 - name: "Install broker (asynchronous)"
   command: "true"
-  notify: "create Knative Eventing broker"
+  notify: "Create Knative Eventing broker"
   when: not (knative_eventing_wait_for_deployments | bool)
