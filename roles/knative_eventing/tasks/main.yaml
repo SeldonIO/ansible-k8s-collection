@@ -2,16 +2,6 @@
 - name: "Install Knative Eventing"
   import_tasks: install.yaml
 
-- name: "Sleep for 5 seconds to give deployments time to appear"
-  wait_for:
-    timeout: 5
-  when: knative_eventing_wait_for_deployments | bool
-
-- name: "Install broker (synchronous)"
-  import_tasks: create_broker.yaml
-  when: knative_eventing_wait_for_deployments | bool
-
-- name: "Install broker (asynchronous)"
+- name: "Notify Knative Eventing broker installation handler"
   command: "true"
   notify: "Create Knative Eventing broker"
-  when: not (knative_eventing_wait_for_deployments | bool)
