@@ -1,7 +1,4 @@
 ---
 - name: "Install Knative Eventing"
   import_tasks: install.yaml
-
-- name: "Notify Knative Eventing broker installation handler"
-  command: "true"
   notify: "Create Knative Eventing broker"
