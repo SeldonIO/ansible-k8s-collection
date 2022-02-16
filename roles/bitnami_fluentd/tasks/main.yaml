@@ -14,3 +14,7 @@
     chart_ref: "fluentd"
     chart_version: "{{ bitnami_fluentd_chart_version }}"
     values: "{{ bitnami_fluentd_values }}"
+  retries: "{{ bitnami_fluentd_retries }}"
+  delay: "{{ bitnami_fluentd_retry_delay_seconds }}"
+  register: _bitnami_fluentd_install_status
+  until: not _bitnami_fluentd_install_status.failed
