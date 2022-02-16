@@ -11,8 +11,6 @@ knative_eventing_broker: "{{ knative_eventing_download_url }}/{{ knative_eventin
 # until: https://github.com/yaml/pyyaml/pull/394 is merged
 knative_eventing_workaround_issue_189: true
 
-knative_eventing_wait_for_deployments: true
-
 knative_eventing_create_default_broker: false
 knative_eventing_default_broker_name: default
 knative_eventing_default_broker_namespace: default

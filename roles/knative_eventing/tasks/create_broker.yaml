@@ -1,12 +1,28 @@
 ---
-- name: "Create a k8s namespace {{ knative_eventing_default_broker_namespace }} "
+- name: "Get list of deployments in Knative Eventing namespace"
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Deployment
+    namespace: knative-eventing
+  register: knative_eventing_deployments
+
+- name: "Extract names of deployments in knative seriving namespace"
+  set_fact:
+    knative_eventing_deployment_names: "{{ knative_eventing_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
+
+- name: "Wait for Knative Eventing deployments"
+  shell: "kubectl rollout status -n knative-eventing deploy/{{ item }}"
+  with_items: "{{ knative_eventing_deployment_names }}"
+
+- name: "Create k8s namespace for default broker"
   kubernetes.core.k8s:
     name: "{{ knative_eventing_default_broker_namespace }}"
     api_version: v1
     kind: Namespace
     state: present
+  when: knative_eventing_create_default_broker | bool
 
-- name: Create default broker
+- name: "Create default broker"
   kubernetes.core.k8s:
     state: present
     definition:
@@ -15,3 +31,4 @@
       metadata:
         name: "{{ knative_eventing_default_broker_name }}"
         namespace: "{{ knative_eventing_default_broker_namespace }}"
+  when: knative_eventing_create_default_broker | bool
