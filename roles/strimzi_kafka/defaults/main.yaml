@@ -1,7 +1,7 @@
 strimzi_kafka_cluster_name: seldon
 strimzi_kafka_namespace: kafka
 strimzi_kafka_install_url: "https://strimzi.io/install/latest?namespace={{ strimzi_kafka_namespace }}"
-strimzi_kafka_create_cluster: true
+strimzi_kafka_create_cluster: false
 strimzi_kafka_create_metrics: true
 strimzi_kafka_replicas: 3
 strimzi_kafka_listener_type: loadbalancer
