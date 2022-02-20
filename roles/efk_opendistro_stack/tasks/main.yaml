@@ -1,15 +1,15 @@
 ---
 - name: Create Namespaces
-  include: namespaces.yaml
+  import_tasks: namespaces.yaml
 
 - name: Create Secrets
-  include: secrets.yaml
+  import_tasks: secrets.yaml
 
 - name: Download Resources
-  include: get_resources.yaml
+  import_tasks: get_resources.yaml
 
 - name: Install Elasticsearch by OpenDistro
-  include: install_elasticsearch.yaml
+  import_tasks: install_elasticsearch.yaml
 
 - name: Install Fluentd
-  include: install_fluentd.yaml
+  import_tasks: install_fluentd.yaml

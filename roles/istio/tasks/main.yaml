@@ -1,13 +1,13 @@
 ---
-- name: Check if Istio {{ istio_version }} already downloaded.
+- name: Check if Istio {{ istio_version }} already downloaded
   stat:
-    path: "{{ inventory_dir }}/.resources/istio-{{ istio_version }}"
+    path: "{{ seldon_cache_directory }}/istio-{{ istio_version }}"
   register: istio_directory
 
 
-- name: "Create .resources directory if does not exist: {{ inventory_dir }}/.resources/"
+- name: "Create resources directory if does not exist: {{ seldon_cache_directory }}/"
   ansible.builtin.file:
-    path: "{{ inventory_dir }}/.resources/"
+    path: "{{ seldon_cache_directory }}/"
     state: directory
     mode: '0755'
 
@@ -15,7 +15,7 @@
 - name: Download Istio {{ istio_version }}
   shell: "curl -L https://istio.io/downloadIstio | ISTIO_VERSION={{ istio_version }} sh -"
   args:
-    chdir: "{{ inventory_dir }}/.resources"
+    chdir: "{{ seldon_cache_directory }}"
     warn: false
   when: istio_directory.stat.exists == false
 
@@ -23,13 +23,13 @@
 - name: Install Istio {{ istio_version }}
   shell: "./bin/istioctl install --set profile=default -y"
   args:
-    chdir: "{{ inventory_dir }}/.resources/istio-{{ istio_version }}"
+    chdir: "{{ seldon_cache_directory }}/istio-{{ istio_version }}"
 
 
 - name: Verify Install Istio {{ istio_version }}
   shell: "./bin/istioctl verify-install"
   args:
-    chdir: "{{ inventory_dir }}/.resources/istio-{{ istio_version }}"
+    chdir: "{{ seldon_cache_directory }}/istio-{{ istio_version }}"
   when: istio_verify_install | bool
 
 
@@ -41,5 +41,5 @@
 
 
 - name: Configure certificates
-  include: certificates.yaml
+  import_tasks: certificates.yaml
   when: istio_self_signed_certs | bool

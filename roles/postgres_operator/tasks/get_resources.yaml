@@ -3,5 +3,5 @@
   ansible.builtin.git:
     version: "{{ postgres_operator_version }}"
     repo: "{{ postgres_operator_repo }}"
-    dest: "{{ inventory_dir }}/.resources/postgres-operator"
+    dest: "{{ seldon_cache_directory }}/postgres-operator"
     force: yes

@@ -7,15 +7,6 @@
     - "{{ strimzi_kafka_install_url }}"
 
 - name: Wait for Kafka Deployment
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: "{{ strimzi_kafka_namespace }}"
-    wait_timeout: 360
+  shell: "kubectl rollout status -n {{ strimzi_kafka_namespace }} deploy/{{ item }}"
   with_items:
     - strimzi-cluster-operator

@@ -1,17 +1,18 @@
 ---
 - name: Create Namespaces
-  include: namespaces.yaml
+  import_tasks: namespaces.yaml
 
 - name: Git clone Seldon Core repo and checkout {{ seldon_core_version }}
   ansible.builtin.git:
     version: "{{ seldon_core_version }}"
     repo: "{{ seldon_core_repo }}"
-    dest: "{{ inventory_dir }}/.resources/seldon-core"
+    dest: "{{ seldon_cache_directory }}/seldon-core"
     force: yes
   when: seldon_core_source_dir is undefined
 
 - name: Set Seldon Core Directory
-  set_fact: seldon_core_source_dir="{{ inventory_dir }}/.resources/seldon-core"
+  set_fact:
+    seldon_core_source_dir: "{{ seldon_cache_directory }}/seldon-core"
   when: seldon_core_source_dir is undefined
 
 - name: Deploy Seldon Core
@@ -23,16 +24,7 @@
     values_files: "{{ seldon_core_values_files }}"
 
 - name: Wait for Seldon Core deployments
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: "{{ seldon_system_namespace }}"
-    wait_timeout: 360
+  shell: "kubectl rollout status -n {{ seldon_system_namespace }} deploy/{{ item }}"
   with_items:
     - seldon-controller-manager
   when: seldon_core_wait_for_deployments | bool

@@ -13,6 +13,9 @@
     gitops_password: "12341234"
     gitops_repo_name: "test-repo"
 
+    external_protocol: "http"
+    external_address: ""
+
     gitea_values:
       gitea:
         admin:
@@ -21,8 +24,8 @@
           email: "admin@seldon.io"
         config:
           server:
-            DOMAIN: "{{ istio_external_ip }}"
-            ROOT_URL: "http://{{ istio_external_ip }}/gitea/"
+            DOMAIN: "{{ external_address }}"
+            ROOT_URL: "{{ external_protocol }}://{{ external_address }}/gitea/"
       service:
         http:
           type: LoadBalancer

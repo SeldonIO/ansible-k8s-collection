@@ -1,0 +1,3 @@
+---
+- name: "Create Knative Eventing broker"
+  include_tasks: create_broker.yaml

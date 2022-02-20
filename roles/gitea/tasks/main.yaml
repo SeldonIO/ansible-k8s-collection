@@ -7,22 +7,6 @@
     state: present
 
 
-- name: Get information about Ingress Gateway
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    name: istio-ingressgateway
-    namespace: istio-system
-  register: istio_web_service
-  when: gitea_use_istio | bool
-
-
-- name: "Set fact about Instio Ingress Gateway External IP"
-  set_fact:
-    istio_external_ip: "{{ istio_web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
-  when: gitea_use_istio | bool
-
-
 - name: Install Gitea Server
   kubernetes.core.helm:
     name: gitea
@@ -34,35 +18,19 @@
     values_files: "{{ gitea_values_files }}"
 
 
-- name: Wait for Gitea pods
-  kubernetes.core.k8s_info:
-    kind: Pod
-    name: "{{ item }}"
-    namespace: "{{ gitea_namespace }}"
-    wait: yes
-    wait_timeout: 600
-    wait_condition:
-      type: Ready
-      status: "True"
+- name: Wait for Gitea StatefulSets
+  shell: "kubectl rollout status -n {{ gitea_namespace }} statefulsets/{{ item }}"
   with_items:
-    - gitea-postgresql-0
-    - gitea-0
+    - gitea-postgresql
+    - gitea
   when: gitea_wait_for_deployments | bool
 
 
 - name: Wait for Gitea deployments (memcached)
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    name: "{{ item }}"
-    namespace: "{{ gitea_namespace }}"
-    wait: yes
-    wait_timeout: 600
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
+  shell: "kubectl rollout status -n {{ gitea_namespace }} deploy/{{ item }}"
   with_items:
     - gitea-memcached
+  when: gitea_wait_for_deployments | bool
 
 
 - name: Get an existing Service object
@@ -116,7 +84,7 @@
   when: repo_data.status == 404
 
 
-- name: Configure GiTea VirtualService
+- name: Configure Gitea VirtualService
   kubernetes.core.k8s:
     state: present
     template: templates/gitea-vs.yaml.j2

@@ -1,0 +1,20 @@
+---
+- name: "Create a k8s namespaces: {{ bitnami_fluentd_namespace }}"
+  kubernetes.core.k8s:
+    name: "{{ bitnami_fluentd_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Install Audit Fluentd
+  kubernetes.core.helm:
+    name: "{{ bitnami_fluentd_name }}"
+    release_namespace: "{{ bitnami_fluentd_namespace }}"
+    chart_repo_url: "https://charts.bitnami.com/bitnami"
+    chart_ref: "fluentd"
+    chart_version: "{{ bitnami_fluentd_chart_version }}"
+    values: "{{ bitnami_fluentd_values }}"
+  retries: "{{ bitnami_fluentd_retries }}"
+  delay: "{{ bitnami_fluentd_retry_delay_seconds }}"
+  register: _bitnami_fluentd_install_status
+  until: not _bitnami_fluentd_install_status.failed

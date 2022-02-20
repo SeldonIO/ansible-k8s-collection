@@ -1,0 +1,9 @@
+- name: Create LetsEncrypt Issuer
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ certmanager_issuer_yaml }}"
+
+- name: Create TLS Certificate
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ certmanager_certificate_yaml }}"

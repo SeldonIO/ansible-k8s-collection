@@ -8,20 +8,28 @@
     - "{{ knative_serving_core }}"
 
 
-- name: Wait for KNative Serving deployments (CRDS and Core)
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: knative-serving
-    wait_timeout: 360
-  with_items: "{{ knative_serving_wait_for_deployments_core_list }}"
+- name: Sleep for 5 seconds to give deployments time to appear
+  wait_for:
+    timeout: 5
   when: knative_serving_wait_for_deployments | bool
 
+- name: Get list of deployments in knative serving namespace
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Deployment
+    namespace: knative-serving
+  register: knative_serving_deployments
+  when: knative_serving_wait_for_deployments | bool
+
+- name: Extract names of deployments in knative serving namespace
+  set_fact:
+    knative_serving_deployment_names: "{{ knative_serving_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
+  when: knative_serving_wait_for_deployments | bool
+
+- name: Wait for Knative Serving deployments (CRDS and Core)
+  shell: "kubectl rollout status -n knative-serving deploy/{{ item }}"
+  with_items: "{{ knative_serving_deployment_names }}"
+  when: knative_serving_wait_for_deployments | bool
 
 - name: Install Knative (Istio Networking)
   kubernetes.core.k8s:
@@ -29,16 +37,40 @@
     definition: "{{ lookup('url', knative_serving_net_istio, split_lines=False) }}"
 
 
-- name: Wait for KNative Serving deployments (Istio Networking)
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: knative-serving
-    wait_timeout: 360
-  with_items: "{{ knative_serving_wait_for_deployments_net_list }}"
+- name: Sleep for 5 seconds to give deployments time to appear
+  wait_for:
+    timeout: 5
   when: knative_serving_wait_for_deployments | bool
+
+- name: Get list of deployments in knative serving namespace
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Deployment
+    namespace: knative-serving
+  register: knative_serving_deployments
+  when: knative_serving_wait_for_deployments | bool
+
+- name: Extract names of deployments in knative serving namespace
+  set_fact:
+    knative_serving_deployment_names: "{{ knative_serving_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
+  when: knative_serving_wait_for_deployments | bool
+
+- name: Wait for KNative Serving deployments (Istio Networking)
+  shell: "kubectl rollout status -n knative-serving deploy/{{ item }}"
+  with_items: "{{ knative_serving_deployment_names }}"
+  when: knative_serving_wait_for_deployments | bool
+
+
+- name: Add tag resolution disabled repositories
+  kubernetes.core.k8s:
+    kind: ConfigMap
+    name: config-deployment
+    namespace: knative-serving
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: config-deployment
+        namespace: knative-serving
+      data:
+        registriesSkippingTagResolving: kind.local,ko.local,dev.local

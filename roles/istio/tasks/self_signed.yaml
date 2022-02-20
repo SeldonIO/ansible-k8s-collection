@@ -40,6 +40,7 @@
     extended_key_usage:
       - serverAuth
     subject_alt_name: # TODO: put istio-ingressgateway and istio-system into variables? {{service}} {{namespace}}
+      - "IP:{{ istio_external_ip }}"
       - "DNS:istio-ingressgateway"
       - "DNS:istio-ingressgateway.istio-system"
       - "DNS:istio-ingressgateway.istio-system.svc"

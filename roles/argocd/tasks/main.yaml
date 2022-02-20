@@ -19,16 +19,7 @@
     values: "{{ argocd_values }}"
 
 - name: Wait for ArgoCD deployments
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: "{{ argocd_namespace }}"
-    wait_timeout: 360
+  shell: "kubectl rollout status -n {{ argocd_namespace }} deploy/{{ item }}"
   with_items:
     - argocd-application-controller
     - argocd-dex-server

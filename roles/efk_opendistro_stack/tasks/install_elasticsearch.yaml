@@ -3,20 +3,11 @@
   kubernetes.core.helm:
     name: elasticsearch
     release_namespace: "{{ elastic_opendistro_namespace }}"
-    chart_ref: "{{ inventory_dir }}/.resources/opendistro-build/helm/opendistro-es"
+    chart_ref: "{{ seldon_cache_directory }}/opendistro-build/helm/opendistro-es"
     values: "{{ elastic_opendistro_values }}"
 
 - name: Wait for Elasticsearch deployments
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-      reason: MinimumReplicasAvailable
-    name: "{{ item }}"
-    namespace: "{{ elastic_opendistro_namespace }}"
-    wait_timeout: 500
+  shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} deploy/{{ item }}"
   with_items:
     - elasticsearch-opendistro-es-client
     - elasticsearch-opendistro-es-kibana
