@@ -10,5 +10,4 @@
   shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} deploy/{{ item }}"
   with_items:
     - elasticsearch-opendistro-es-client
-    - elasticsearch-opendistro-es-kibana
   when: elastic_opendistro_wait_for_deployments | bool
