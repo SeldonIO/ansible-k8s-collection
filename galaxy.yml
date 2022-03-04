@@ -14,6 +14,6 @@ tags:
     - seldon
     - kubernetes
     - ecosystem
-repository: "https://www.github.com/seldonio/ansible-tools"
+repository: "https://www.github.com/seldonio/ansible-k8s-collection"
 build_ignore:
     - .resources
