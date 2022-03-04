@@ -1,6 +1,6 @@
 namespace: "seldonio"
 name: "k8s"
-version: "0.6.0-dev"
+version: "0.6.0"
 readme: "README.md"
 authors:
     - "Seldon Technologies Ltd. <hello@seldon.io>"
@@ -14,6 +14,6 @@ tags:
     - seldon
     - kubernetes
     - ecosystem
-repository: "https://www.github.com/seldonio/ansible-tools"
+repository: "https://www.github.com/seldonio/ansible-k8s-collection"
 build_ignore:
     - .resources
