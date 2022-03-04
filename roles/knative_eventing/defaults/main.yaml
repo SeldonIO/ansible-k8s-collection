@@ -1,5 +1,5 @@
 ---
-knative_eventing_version: v0.25.0
+knative_eventing_version: "knative-v1.1.0"
 knative_eventing_download_url: "https://github.com/knative/eventing/releases/download"
 
 knative_eventing_crds: "{{ knative_eventing_download_url }}/{{ knative_eventing_version }}/eventing-crds.yaml"
