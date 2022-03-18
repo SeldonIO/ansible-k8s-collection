@@ -17,7 +17,7 @@
     chart_ref: "argo-cd"
     chart_version: "{{ argocd_chart_version }}"
     values: "{{ argocd_values }}"
-  notify: "Wait for ArgoCD rollout"
+  notify: "wait for rollout"
 
 - name: Configure ArgoCD VirtualService
   kubernetes.core.k8s:
