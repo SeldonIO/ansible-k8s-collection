@@ -22,9 +22,4 @@
     chart_ref: "{{ seldon_core_source_dir }}/helm-charts/seldon-core-operator"
     values: "{{ seldon_core_values }}"
     values_files: "{{ seldon_core_values_files }}"
-
-- name: Wait for Seldon Core deployments
-  shell: "kubectl rollout status -n {{ seldon_system_namespace }} deploy/{{ item }}"
-  with_items:
-    - seldon-controller-manager
-  when: seldon_core_wait_for_deployments | bool
+  notify: "Wait for rollout - Seldon Core"
