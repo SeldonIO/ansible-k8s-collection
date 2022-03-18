@@ -1,0 +1,6 @@
+---
+- name: "Wait for rollout - Iter8"
+  shell: "kubectl rollout status -n {{ iter8_namespace }} deploy/{{ item }}"
+  with_items:
+    - iter8-analytics
+    - iter8-controller-manager

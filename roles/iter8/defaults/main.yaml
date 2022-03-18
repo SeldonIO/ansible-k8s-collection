@@ -5,4 +5,3 @@ iter8_namespace: iter8-system
 iter8_version: master
 
 iter8_repo: https://github.com/iter8-tools/iter8.git
-iter8_wait_for_deployments: true
