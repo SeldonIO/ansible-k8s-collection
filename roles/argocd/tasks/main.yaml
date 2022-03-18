@@ -17,16 +17,7 @@
     chart_ref: "argo-cd"
     chart_version: "{{ argocd_chart_version }}"
     values: "{{ argocd_values }}"
-
-- name: Wait for ArgoCD deployments
-  shell: "kubectl rollout status -n {{ argocd_namespace }} deploy/{{ item }}"
-  with_items:
-    - argocd-application-controller
-    - argocd-dex-server
-    - argocd-redis
-    - argocd-repo-server
-    - argocd-server
-  when: argocd_wait_for_deployments | bool
+  notify: "Wait for ArgoCD rollout"
 
 - name: Configure ArgoCD VirtualService
   kubernetes.core.k8s:

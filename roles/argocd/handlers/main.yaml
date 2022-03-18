@@ -1,0 +1,3 @@
+---
+- name: "Wait for ArgoCD rollout"
+  include_tasks: await_rollout.yaml
