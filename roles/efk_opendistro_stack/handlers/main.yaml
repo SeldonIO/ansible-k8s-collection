@@ -1,0 +1,15 @@
+---
+- name: "Wait for rollout - OpenDistro Fluentd"
+  shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} daemonset/{{ item }}"
+  with_items:
+    - fluentd-fluentd-elasticsearch
+
+- name: "Wait for rollout - OpenDistro Elasticsearch"
+  shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} {{ item.kind }}/{{ item.name }}"
+  with_items:
+    - kind: "deploy"
+      name: "elasticsearch-opendistro-es-client"
+    - kind: "sts"
+      name: "elasticsearch-opendistro-es-data"
+    - kind: "sts"
+      name: "elasticsearch-opendistro-es-master"
