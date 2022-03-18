@@ -12,9 +12,7 @@ elastic_opendistro_password: admin
 elastic_opendistro_repo: https://github.com/opendistro-for-elasticsearch/opendistro-build.git
 elastic_opendistro_version: v1.13.2
 elastic_opendistro_values: {}
-elastic_opendistro_wait_for_deployments: true
 
 
 fluentd_chart_version: 10.0.1
 fluentd_values: {}
-fluentd_wait_for_deployments: true
