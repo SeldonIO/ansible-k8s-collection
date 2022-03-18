@@ -1,0 +1,21 @@
+---
+- name: "Sleep for 5 seconds to give deployments time to appear"
+  wait_for:
+    timeout: 5
+
+- name: "Get list of deployments for Seldon Core Analytics"
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Deployment
+    namespace: "{{ seldon_system_namespace }}"
+    label_selectors:
+    - release = seldon-core-analytics
+  register: seldon_core_analytics_deployments
+
+- name: "Extract names of deployments for Seldon Core Analytics"
+  set_fact:
+    seldon_core_analytics_deployments_names: "{{ seldon_core_analytics_deployments.resources | map(attribute='metadata') | map(attribute='name') }}"
+
+- name: "Wait for Seldon Core Analytics deployments"
+  shell: "kubectl rollout status -n {{ seldon_system_namespace }} deploy/{{ item }}"
+  with_items: "{{ seldon_core_analytics_deployments_names }}"
