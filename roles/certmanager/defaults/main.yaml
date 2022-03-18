@@ -2,8 +2,6 @@
 certmanager_version: v1.8.0
 certmanager_yaml: "https://github.com/cert-manager/cert-manager/releases/download/{{ certmanager_version }}/cert-manager.yaml"
 
-certmanager_wait_for_deployments: true
-
 certmanager_use_letsencrypt: false
 certmanager_certificate_email: ""
 certmanager_certificate_domain: ""

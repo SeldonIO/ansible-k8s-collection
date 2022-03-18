@@ -1,0 +1,7 @@
+---
+- name: "Wait for rollout - Certmanager"
+  shell: "kubectl rollout status -n cert-manager deploy/{{ item }}"
+  with_items:
+    - cert-manager
+    - cert-manager-cainjector
+    - cert-manager-webhook
