@@ -1,0 +1,5 @@
+---
+- name: Install Kube Prometheus
+  hosts: localhost
+  roles:
+    - kube_prometheus

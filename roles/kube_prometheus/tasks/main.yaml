@@ -1,0 +1,26 @@
+---
+- name: Git clone kube-prometheus repo and checkout {{ kube_prometheus_version }}
+  ansible.builtin.git:
+    version: "{{ kube_prometheus_version }}"
+    repo: "{{ kube_prometheus_repo }}"
+    dest: "{{ seldon_cache_directory }}/kube_prometheus"
+    force: yes
+  when: kube_prometheus_source_dir is undefined
+
+- name: Set kube_prometheus_source_dir Directory
+  set_fact:
+    kube_prometheus_source_dir: "{{ seldon_cache_directory }}/kube_prometheus"
+  when: kube_prometheus_source_dir is undefined
+
+- name: Install kube_prometheus CRDs
+#  shell: "kubectl create -f {{ item }}"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') }}"
+  with_fileglob:
+  - "{{ kube_prometheus_source_dir }}/manifests/setup/*.yaml"
+
+- name: Install kube_prometheus components
+  shell: "kubectl apply -f {{ item }}"
+  with_fileglob:
+  - "{{ kube_prometheus_source_dir }}/manifests/*.yaml"

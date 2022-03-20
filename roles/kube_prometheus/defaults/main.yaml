@@ -1,0 +1,8 @@
+---
+seldon_cache_directory: "{{ ansible_env.HOME }}/.cache/seldon"
+
+#kube_prometheus_namespace: iter8-system
+kube_prometheus_version: v0.10.0
+
+kube_prometheus_repo: https://github.com/prometheus-operator/kube-prometheus
+#kube_prometheus_wait_for_deployments: true
