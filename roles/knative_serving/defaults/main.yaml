@@ -1,5 +1,5 @@
 ---
-knative_serving_version: v0.25.0
+knative_serving_version: "knative-v1.1.0"
 
 knative_serving_crds: "https://github.com/knative/serving/releases/download/{{ knative_serving_version }}/serving-crds.yaml"
 knative_serving_core: "https://github.com/knative/serving/releases/download/{{ knative_serving_version }}/serving-core.yaml"
