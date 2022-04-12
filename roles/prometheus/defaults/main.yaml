@@ -1,0 +1,5 @@
+---
+seldon_system_namespace: seldon-system
+seldon_monitoring_prometheus_operator_values: ""
+seldon_monitoring_prometheus_operator_chart_version: "6.9.3"
+seldon_monitoring_podmonitor: "{{ lookup('file', 'podmonitor.yaml') | from_yaml }}"
