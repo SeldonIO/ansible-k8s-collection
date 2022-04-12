@@ -1,4 +1,6 @@
 ---
+# Note: seldon_core_analytics is deprecated, use prometheus role instead
+
 - name: "Create a {{ seldon_system_namespace }} namespaces"
   kubernetes.core.k8s:
     name: "{{ seldon_system_namespace }}"

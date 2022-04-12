@@ -1,0 +1,22 @@
+---
+- name: "Create {{ seldon_system_namespace }} namespace if it doesn't exist"
+  kubernetes.core.k8s:
+    name: "{{ seldon_system_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Install Prometheus Operator
+  kubernetes.core.helm:
+    name: seldon-monitoring
+    release_namespace: "{{ seldon_system_namespace }}"
+    chart_repo_url: "https://charts.bitnami.com/bitnami"
+    chart_ref: "kube-prometheus"
+    chart_version: "{{ seldon_monitoring_prometheus_operator_chart_version }}"
+    values: "{{ seldon_monitoring_prometheus_operator_values }}"
+
+- name: Create PodMonitor Resource
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ seldon_system_namespace }}"
+    definition: "{{ seldon_monitoring_podmonitor }}"
