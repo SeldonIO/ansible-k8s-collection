@@ -15,7 +15,7 @@
     chart_version: "{{ seldon_monitoring_prometheus_operator_chart_version }}"
     values: "{{ seldon_monitoring_prometheus_operator_values }}"
 
-- name: Create Podmonitor Resource
+- name: Create PodMonitor Resource
   kubernetes.core.k8s:
     state: present
     namespace: "{{ seldon_system_namespace }}"
