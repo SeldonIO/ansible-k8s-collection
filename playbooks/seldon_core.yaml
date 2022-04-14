@@ -5,13 +5,14 @@
     - istio
     - minio
     - seldon_core
+    - seldon_core_analytics
   vars:
     istio_version: 1.7.6
 
     # Verify Install does not work with 1.7.x on k8s 1.18.x
     istio_verify_install: false
 
-    seldon_core_version: v1.13.0
+    seldon_core_version: v1.13.1
 
     seldon_core_values:
       istio:
