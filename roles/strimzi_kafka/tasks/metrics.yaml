@@ -39,6 +39,7 @@
   set_fact:
     dashboards: "{{ dashboards | default({}) | combine({ item | basename : lookup('file', item) }) }}"
   with_fileglob: "config/*"
+  when: strimzi_kafka_install_grafana | bool
 
 - name: Create Grafana Dashboards Config Map
   community.kubernetes.k8s:
@@ -52,6 +53,7 @@
         labels:
           kafka_dashboard: "1"
       data: "{{ dashboards }}"
+  when: strimzi_kafka_install_grafana | bool
 
 - name: Install Grafana
   kubernetes.core.helm:
@@ -61,3 +63,4 @@
     chart_ref: "grafana"
     chart_version: "{{ strimzi_kafka_grafana_version }}"
     values: "{{ lookup('template', 'grafana-values.yaml') | from_yaml }}"
+  when: strimzi_kafka_install_grafana | bool
