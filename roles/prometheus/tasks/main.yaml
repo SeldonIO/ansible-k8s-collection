@@ -20,3 +20,4 @@
     state: present
     namespace: "{{ seldon_system_namespace }}"
     definition: "{{ seldon_monitoring_podmonitor }}"
+  when: seldon_monitoring_create_default_podmonitor | bool
