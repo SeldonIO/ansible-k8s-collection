@@ -1,12 +1,12 @@
 ---
-- name: Install Certmanager
+- name: "Install Certmanager"
   kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
     - "{{ certmanager_yaml }}"
 
-- name: Wait for cert-manager pods become ready
+- name: "Wait for rollout - cert-manager"
   shell: "kubectl rollout status -n cert-manager deploy/{{ item }}"
   with_items:
     - cert-manager
@@ -14,6 +14,6 @@
     - cert-manager-webhook
   when: certmanager_wait_for_deployments | bool
 
-- name: Configure Letsencrypt certificates
+- name: "Configure Letsencrypt certificates"
   import_tasks: letsencrypt.yaml
   when: certmanager_use_letsencrypt | bool
