@@ -4,12 +4,12 @@
     state: present
     namespace: "{{ strimzi_kafka_namespace }}"
     template: templates/prometheus-operator-deployment.yaml.j2
-
+  when: strimzi_kafka_install_prometheus_operator | bool
 
 - name: Create Prometheus Additional Rules Secret
   kubernetes.core.k8s:
     state: present
-    namespace: "{{ strimzi_kafka_namespace }}"    
+    namespace: "{{ strimzi_kafka_namespace }}"
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
     - "{{ strimzi_kafka_prometheus_rules_secret_url }}"
@@ -19,6 +19,7 @@
     state: present
     namespace: "{{ strimzi_kafka_namespace }}"
     template: templates/prometheus.yaml.j2
+  when: strimzi_kafka_create_prometheus_instance | bool
 
 - name: Create Pod Monitor
   kubernetes.core.k8s:
@@ -29,7 +30,7 @@
 - name: Create Prometheus Rules
   kubernetes.core.k8s:
     state: present
-    namespace: "{{ strimzi_kafka_namespace }}"    
+    namespace: "{{ strimzi_kafka_namespace }}"
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
     - "{{ strimzi_kafka_prometheus_rules_url }}"
@@ -38,6 +39,7 @@
   set_fact:
     dashboards: "{{ dashboards | default({}) | combine({ item | basename : lookup('file', item) }) }}"
   with_fileglob: "config/*"
+  when: strimzi_kafka_install_grafana | bool
 
 - name: Create Grafana Dashboards Config Map
   community.kubernetes.k8s:
@@ -51,7 +53,8 @@
         labels:
           kafka_dashboard: "1"
       data: "{{ dashboards }}"
-        
+  when: strimzi_kafka_install_grafana | bool
+
 - name: Install Grafana
   kubernetes.core.helm:
     name: kafka-grafana
@@ -60,6 +63,4 @@
     chart_ref: "grafana"
     chart_version: "{{ strimzi_kafka_grafana_version }}"
     values: "{{ lookup('template', 'grafana-values.yaml') | from_yaml }}"
-                              
-
-  
+  when: strimzi_kafka_install_grafana | bool
