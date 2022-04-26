@@ -12,4 +12,6 @@ strimzi_kafka_grafana_version: 6.14.1
 
 strimzi_kafka_install_prometheus_operator: true
 strimzi_kafka_create_prometheus_instance: true
+
 strimzi_kafka_install_grafana: true
+strimzi_kafka_grafana_prometheus_url: http://prometheus-operated.kafka:9090

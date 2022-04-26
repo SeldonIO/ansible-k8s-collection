@@ -10,5 +10,5 @@ datasources:
     datasources:
     - name: DS_PROMETHEUS
       type: prometheus
-      url: http://prometheus-operated.kafka:9090
+      url: "{{ strimzi_kafka_grafana_prometheus_url }}"
       access: proxy
