@@ -1,5 +1,6 @@
 ---
 seldon_system_namespace: seldon-system
+seldon_monitoring_namespace: "{{ seldon_system_namespace }}"
 seldon_monitoring_prometheus_operator_values: {}
 seldon_monitoring_prometheus_operator_chart_version: "6.9.3"
 
