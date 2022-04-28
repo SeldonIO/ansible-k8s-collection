@@ -1,0 +1,4 @@
+---
+- import_tasks: namespaces.yaml
+
+- import_tasks: install.yaml
