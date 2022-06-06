@@ -2,7 +2,7 @@
 seldon_system_namespace: "seldon-system"
 elastic_opensearch_namespace: "seldon-logs"
 
-elastic_opensearch_secret_name: "opensearch-credentials"
+elastic_opensearch_secret_name: "elastic-credentials"
 
 elastic_opensearch_user: admin
 elastic_opensearch_password: admin
