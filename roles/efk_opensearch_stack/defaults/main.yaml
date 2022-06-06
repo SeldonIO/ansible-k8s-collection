@@ -7,7 +7,8 @@ elastic_opensearch_secret_name: "elastic-credentials"
 elastic_opensearch_user: admin
 elastic_opensearch_password: admin
 
-elastic_opensearch_chart_repo: ""
+elastic_opensearch_chart_repo: "https://opensearch-project.github.io/helm-charts"
+elastic_opensearch_chart_name: "opensearch"
 elastic_opensearch_chart_version: "1.11.1"
 elastic_opensearch_values: {}
 elastic_opensearch_wait_for_deployments: true
