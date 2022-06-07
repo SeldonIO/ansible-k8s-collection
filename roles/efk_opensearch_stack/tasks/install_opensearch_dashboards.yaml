@@ -10,7 +10,7 @@
     release_values: "{{ elastic_opensearch_dashboards_values }}"
 
 - name: "Wait for OpenSearch Dashboards rollout"
-  when: elastic_opensearch_dashboards_wait_for_deployments | bool
   shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
   with_items:
     - "deployments/opensearch-dashboards"
+  when: elastic_opensearch_dashboards_wait_for_deployments | bool
