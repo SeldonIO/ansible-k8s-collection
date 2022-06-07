@@ -8,5 +8,9 @@
 - name: "Install OpenSearch cluster"
   import_tasks: install_opensearch.yaml
 
+- name: "Install OpenSearch Dashboards"
+  when: elastic_opensearch_dashboards_enable | bool
+  import_tasks: install_opensearch_dashboards.yaml
+
 - name: "Install Fluentd"
   import_tasks: install_fluentd.yaml
