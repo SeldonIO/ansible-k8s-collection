@@ -1,10 +1,10 @@
 ---
 - name: "Ensure namespaces exist"
-  with_items:
-    - "{{ seldon_system_namespace }}"
-    - "{{ elastic_opensearch_namespace }}"
   kubernetes.core.k8s:
     api_version: v1
     kind: Namespace
     name: "{{ item }}"
     state: present
+  with_items:
+    - "{{ seldon_system_namespace }}"
+    - "{{ elastic_opensearch_namespace }}"

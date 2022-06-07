@@ -11,6 +11,6 @@
 
 - name: "Wait for OpenSearch rollout"
   when: elastic_opensearch_wait_for_deployments | bool
+  shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
   with_items:
     - "statefulset/opensearch-cluster-master"
-  shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
