@@ -1,0 +1,16 @@
+---
+- name: "Install Fluentd"
+  kubernetes.core.helm:
+    chart_repo_url: "{{ elastic_fluentd_chart_repo }}"
+    chart_ref: "{{ elastic_fluentd_chart_name }}"
+    chart_version: "{{ elastic_fluentd_chart_version }}"
+    release_namespace: "{{ elastic_opensearch_namespace }}"
+    release_name: "fluentd"
+    release_state: present
+    release_values: "{{ elastic_fluentd_values }}"
+
+- name: "Wait for Fluentd rollout"
+  shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
+  with_items:
+    - "daemonset/fluentd-fluentd-elasticsearch"
+  when: elastic_fluentd_wait_for_deployments | bool

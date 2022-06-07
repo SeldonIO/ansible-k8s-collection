@@ -1,0 +1,26 @@
+---
+seldon_system_namespace: "seldon-system"
+elastic_opensearch_namespace: "seldon-logs"
+
+elastic_opensearch_secret_name: "elastic-credentials"
+
+elastic_opensearch_user: admin
+elastic_opensearch_password: admin
+
+elastic_opensearch_chart_repo: "https://opensearch-project.github.io/helm-charts"
+elastic_opensearch_chart_name: "opensearch"
+elastic_opensearch_chart_version: "1.11.1"
+elastic_opensearch_values: {}
+elastic_opensearch_wait_for_deployments: true
+
+elastic_opensearch_dashboards_enable: false
+elastic_opensearch_dashboards_chart_name: "opensearch-dashboards"
+elastic_opensearch_dashboards_chart_version: "1.5.1"
+elastic_opensearch_dashboards_values: {}
+elastic_opensearch_dashboards_wait_for_deployments: true
+
+elastic_fluentd_chart_repo: "https://kokuwaio.github.io/helm-charts"
+elastic_fluentd_chart_name: "fluentd-elasticsearch"
+elastic_fluentd_chart_version: "10.0.1"
+elastic_fluentd_values: {}
+elastic_fluentd_wait_for_deployments: true

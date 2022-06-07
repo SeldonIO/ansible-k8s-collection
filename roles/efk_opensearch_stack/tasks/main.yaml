@@ -1,0 +1,16 @@
+---
+- name: "Create namespaces"
+  import_tasks: namespaces.yaml
+
+- name: "Create secrets"
+  import_tasks: secrets.yaml
+
+- name: "Install OpenSearch cluster"
+  import_tasks: install_opensearch.yaml
+
+- name: "Install OpenSearch Dashboards"
+  import_tasks: install_opensearch_dashboards.yaml
+  when: elastic_opensearch_dashboards_enable | bool
+
+- name: "Install Fluentd"
+  import_tasks: install_fluentd.yaml
