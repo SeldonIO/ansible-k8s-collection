@@ -2,7 +2,7 @@
 bitnami_fluentd_namespace: seldon-logs
 bitnami_fluentd_name: fluentd
 
-bitnami_fluentd_chart_version: 4.1.6
+bitnami_fluentd_chart_version: 5.1.7
 bitnami_fluentd_values: {}
 
 bitnami_fluentd_retries: 5
