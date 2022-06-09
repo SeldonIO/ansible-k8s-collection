@@ -8,3 +8,4 @@
     release_name: "fluentd"
     release_state: present
     release_values: "{{ elastic_fluentd_values }}"
+  notify: "Wait for rollout - Opensearch Fluentd"

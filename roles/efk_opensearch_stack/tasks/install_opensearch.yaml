@@ -8,3 +8,4 @@
     release_name: "opensearch"
     release_state: present
     release_values: "{{ elastic_opensearch_values }}"
+  notify: "Wait for rollout - Opensearch Elasticsearch"
