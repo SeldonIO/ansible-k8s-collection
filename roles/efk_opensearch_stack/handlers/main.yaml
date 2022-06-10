@@ -1,0 +1,15 @@
+---
+- name: "Wait for rollout - OpenSearch Fluentd"
+  shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
+  with_items:
+    - "daemonset/fluentd-fluentd-elasticsearch"
+
+- name: "Wait for rollout - OpenSearch Elasticsearch"
+  shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
+  with_items:
+    - "statefulset/opensearch-cluster-master"
+
+- name: "Wait for rollout - OpenSearch Dashboards"
+  shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
+  with_items:
+    - "deployments/opensearch-dashboards"

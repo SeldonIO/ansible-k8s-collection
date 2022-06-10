@@ -8,9 +8,4 @@
     release_name: "fluentd"
     release_state: present
     release_values: "{{ elastic_fluentd_values }}"
-
-- name: "Wait for Fluentd rollout"
-  shell: "kubectl rollout status -n {{ elastic_opensearch_namespace }} {{ item }}"
-  with_items:
-    - "daemonset/fluentd-fluentd-elasticsearch"
-  when: elastic_fluentd_wait_for_deployments | bool
+  notify: "Wait for rollout - OpenSearch Fluentd"

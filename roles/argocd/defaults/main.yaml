@@ -2,7 +2,6 @@
 argocd_namespace: argocd
 argocd_chart_version: 3.33.7
 
-argocd_wait_for_deployments: true
 argocd_values: {}
 
 gitops_repository: ""

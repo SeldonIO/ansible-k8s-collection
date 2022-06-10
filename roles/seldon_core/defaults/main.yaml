@@ -10,5 +10,3 @@ seldon_namespaces: [ seldon ]
 
 seldon_core_values: {}
 seldon_core_values_files: []
-
-seldon_core_wait_for_deployments: true

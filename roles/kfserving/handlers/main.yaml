@@ -1,0 +1,5 @@
+---
+- name: "Wait for rollout - KFServing"
+  shell: "kubectl rollout status -n kfserving-system statefulsets/{{ item }}"
+  with_items:
+    - kfserving-controller-manager
