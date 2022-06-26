@@ -5,6 +5,7 @@
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
     - "{{ kfserving_yaml }}"
+  notify: "Wait for rollout - KFServing"
 
 - name: Update KfServing ConfigMap
   kubernetes.core.k8s:
@@ -35,9 +36,3 @@
             "cpuLimit": "1",
             "defaultUrl": "http://broker-ingress.knative-eventing.svc.cluster.local/seldon-logs/default"
           }
-
-- name: Wait for KFServing Controller Manager
-  shell: "kubectl rollout status -n kfserving-system statefulsets/{{ item }}"
-  with_items:
-    - kfserving-controller-manager
-  when: kfserving_wait_for_deployments | bool

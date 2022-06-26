@@ -1,0 +1,6 @@
+---
+- name: "Wait for rollout - Argo Workflows"
+  shell: "kubectl rollout status -n {{ argo_workflows_namespace }} deploy/{{ item }}"
+  with_items:
+    - argo-workflows-server
+    - argo-workflows-workflow-controller

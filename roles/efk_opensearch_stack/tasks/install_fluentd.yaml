@@ -1,0 +1,11 @@
+---
+- name: "Install Fluentd"
+  kubernetes.core.helm:
+    chart_repo_url: "{{ elastic_fluentd_chart_repo }}"
+    chart_ref: "{{ elastic_fluentd_chart_name }}"
+    chart_version: "{{ elastic_fluentd_chart_version }}"
+    release_namespace: "{{ elastic_opensearch_namespace }}"
+    release_name: "fluentd"
+    release_state: present
+    release_values: "{{ elastic_fluentd_values }}"
+  notify: "Wait for rollout - OpenSearch Fluentd"

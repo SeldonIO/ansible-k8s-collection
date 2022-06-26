@@ -1,0 +1,3 @@
+---
+- name: "Wait for rollout - Seldon Core Analytics"
+  include_tasks: "await_rollout.yaml"

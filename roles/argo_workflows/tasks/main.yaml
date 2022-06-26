@@ -14,13 +14,7 @@
     chart_ref: "argo-workflows"
     chart_version: "{{ argo_workflows_chart_version }}"
     values: "{{ argo_workflows_values }}"
-
-- name: Wait for Argo deployments
-  shell: "kubectl rollout status -n {{ argo_workflows_namespace }} deploy/{{ item }}"
-  with_items:
-    - argo-workflows-server
-    - argo-workflows-workflow-controller
-  when: argo_workflows_wait_for_deployments | bool
+  notify: "Wait for rollout - Argo Workflows"
 
 - name: Configure Service RBAC
   import_tasks: rbac.yaml

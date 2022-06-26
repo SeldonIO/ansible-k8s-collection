@@ -7,5 +7,5 @@
   vars:
     kind_cluster_name: ansible
     kind_version: v0.14.0
-    kind_image_version: kindest/node:v1.24.0@sha256:0866296e693efe1fed79d5e6c7af8df71fc73ae45e3679af05342239cdc5bc8e
+    kind_image_version: kindest/node:v1.24.0@sha256:0866296e693efe1fed79d5e6c7af8df71fc73ae45e3679af05342239cdc5b
     kind_kubectl_default_namespace: seldon

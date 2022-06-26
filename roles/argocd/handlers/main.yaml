@@ -1,0 +1,9 @@
+---
+- name: "Wait for rollout - ArgoCD"
+  shell: "kubectl rollout status -n {{ argocd_namespace }} deploy/{{ item }}"
+  with_items:
+    - argocd-application-controller
+    - argocd-dex-server
+    - argocd-redis
+    - argocd-repo-server
+    - argocd-server

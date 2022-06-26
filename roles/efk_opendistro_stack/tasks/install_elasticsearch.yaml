@@ -5,16 +5,4 @@
     release_namespace: "{{ elastic_opendistro_namespace }}"
     chart_ref: "{{ seldon_cache_directory }}/opendistro-build/helm/opendistro-es"
     values: "{{ elastic_opendistro_values }}"
-
-- name: Wait for Elasticsearch deployments
-  shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} deploy/{{ item }}"
-  with_items:
-    - elasticsearch-opendistro-es-client
-  when: elastic_opendistro_wait_for_deployments | bool
-
-- name: "Wait for Elasticsearch statefulsets"
-  shell: "kubectl rollout status -n {{ elastic_opendistro_namespace }} sts/{{ item }}"
-  with_items:
-    - elasticsearch-opendistro-es-data
-    - elasticsearch-opendistro-es-master
-  when: elastic_opendistro_wait_for_deployments | bool
+  notify: "Wait for rollout - OpenDistro Elasticsearch"

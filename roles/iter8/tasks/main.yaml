@@ -14,10 +14,4 @@
 
 - name: Install Iter8
   ansible.builtin.shell: "kustomize build {{ seldon_cache_directory }}/iter8/install/core | kubectl apply -n {{ iter8_namespace }} -f -"
-
-- name: Wait for Iter8 deployments
-  shell: "kubectl rollout status -n {{ iter8_namespace }} deploy/{{ item }}"
-  with_items:
-    - iter8-analytics
-    - iter8-controller-manager
-  when: iter8_wait_for_deployments | bool
+  notify: "Wait for rollout - Iter8"
