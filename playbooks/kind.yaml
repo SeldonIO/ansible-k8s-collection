@@ -6,8 +6,7 @@
     - metallb
   vars:
     kind_cluster_name: ansible
-    kind_kubectl_default_namespace: seldon
-
-    # For compatible version of image for each kind version please see https://github.com/kubernetes-sigs/kind/releases
+    # For compatible version of image for each kind version please see https://github.com/kubernetes-sigs/kind/releases    
     kind_version: v0.14.0
-    kind_image_version: kindest/node:v1.21.12@sha256:f316b33dd88f8196379f38feb80545ef3ed44d9197dca1bfd48bcb1583210207
+    kind_image_version: kindest/node:v1.24.0@sha256:0866296e693efe1fed79d5e6c7af8df71fc73ae45e3679af05342239cdc5b
+    kind_kubectl_default_namespace: seldon
