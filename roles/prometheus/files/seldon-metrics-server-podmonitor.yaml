@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: seldon-metrics-server-podmonitor
+spec:
+  selector:
+    matchLabels:
+      seldon.io/metrics: "true"
+  podMetricsEndpoints:
+    - port: user-port
+      path: /v1/metrics
+  namespaceSelector:
+    any: true

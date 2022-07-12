@@ -15,9 +15,16 @@
     chart_version: "{{ seldon_monitoring_prometheus_operator_chart_version }}"
     values: "{{ seldon_monitoring_prometheus_operator_values }}"
 
-- name: Create PodMonitor Resource
+- name: Create Default PodMonitor Resource
   kubernetes.core.k8s:
     state: present
     namespace: "{{ seldon_monitoring_namespace }}"
     definition: "{{ seldon_monitoring_podmonitor }}"
+  when: seldon_monitoring_create_default_podmonitor | bool
+
+- name: Create Metrics Server PodMonitor Resource
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ seldon_monitoring_namespace }}"
+    definition: "{{ seldon_monitoring_metrics_podmonitor }}"
   when: seldon_monitoring_create_default_podmonitor | bool
