@@ -28,31 +28,13 @@
     state: present
     definition: "{{ lookup('url', item, split_lines=False) }}"
   with_items:
-    - "{{ metallb_manifest_namespace }}"
     - "{{ metallb_manifest_metallb }}"
 
 
-- name: Create OpenSSL secretkey
-  command:
-    argv:
-      - openssl
-      - rand
-      - -base64
-      - 128
-  register: openssl_secretkey
-
-
-- name: Create memberlist secret
-  kubernetes.core.k8s:
-    state: present
-    name: memberlist
-    namespace: metallb-system
-    definition:
-      apiVersion: v1
-      kind: Secret
-      type: Opaque
-      stringData:
-        secretkey: "{{ openssl_secretkey.stdout }}"
+- name: "Wait for rollout of MetalLB Controller"
+  shell: "kubectl rollout status -n metallb-system deploy/{{ item }}"
+  with_items:
+  - controller
 
 
 - name: Create MetalLB Config
@@ -60,3 +42,7 @@
     state: present
     template: templates/metallb_config.yaml.j2
   when: (metallb_range_start is defined) and (metallb_range_stop is defined)
+  retries: "{{ metallb_retries }}"
+  delay: "{{ metallb_retry_delay_seconds }}"
+  register: _metallb_install_status
+  until: not _metallb_install_status.failed
