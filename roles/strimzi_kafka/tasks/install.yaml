@@ -9,7 +9,7 @@
 - name: Add Feature Gates
   shell: >
       kubectl set env deployment/strimzi-cluster-operator
-      -n {{ kafka_namespace }}
+      -n {{ strimzi_kafka_namespace }}
       STRIMZI_FEATURE_GATES={{ strimzi_kafka_feature_gates | join(',') }}
   tags: kraft
   when: strimzi_kafka_add_feature_gates | bool
