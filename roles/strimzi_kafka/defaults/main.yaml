@@ -15,3 +15,8 @@ strimzi_kafka_create_prometheus_instance: true
 
 strimzi_kafka_install_grafana: true
 strimzi_kafka_grafana_prometheus_url: http://prometheus-operated.kafka:9090
+
+strimzi_kafka_add_feature_gates: true
+strimzi_kafka_feature_gates:
+  - "+UseKRaft"
+  - "+UseStrimziPodSets"

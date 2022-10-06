@@ -6,9 +6,9 @@
   import_tasks: install.yaml
 
 - name: Create Kafka Cluster
-  import_tasks: cluster.yaml
+  include_tasks: cluster.yaml
   when: strimzi_kafka_create_cluster | bool
 
 - name: Install metrics
-  import_tasks: metrics.yaml
+  include_tasks: metrics.yaml
   when: strimzi_kafka_create_metrics | bool

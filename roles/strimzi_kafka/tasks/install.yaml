@@ -6,6 +6,14 @@
   with_items:
     - "{{ strimzi_kafka_install_url }}"
 
+- name: Add Feature Gates
+  shell: >
+      kubectl set env deployment/strimzi-cluster-operator
+      -n {{ strimzi_kafka_namespace }}
+      STRIMZI_FEATURE_GATES={{ strimzi_kafka_feature_gates | join(',') }}
+  tags: kraft
+  when: strimzi_kafka_add_feature_gates | bool
+
 - name: Wait for Kafka Deployment
   shell: "kubectl rollout status -n {{ strimzi_kafka_namespace }} deploy/{{ item }}"
   with_items:
