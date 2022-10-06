@@ -10,5 +10,5 @@
   when: strimzi_kafka_create_cluster | bool
 
 - name: Install metrics
-  import_tasks: metrics.yaml
+  include_tasks: metrics.yaml
   when: strimzi_kafka_create_metrics | bool
