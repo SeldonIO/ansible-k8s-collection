@@ -42,7 +42,7 @@
   when: strimzi_kafka_install_grafana | bool
 
 - name: Create Grafana Dashboards Config Map
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: v1
