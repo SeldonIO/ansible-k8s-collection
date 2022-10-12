@@ -33,6 +33,13 @@
   when: gitea_wait_for_deployments | bool
 
 
+- name: Configure Gitea VirtualService
+  kubernetes.core.k8s:
+    state: present
+    template: templates/gitea-vs.yaml.j2
+  when: gitea_create_virtualservice | bool
+
+
 - name: Get an existing Service object
   kubernetes.core.k8s_info:
     api_version: v1
@@ -82,10 +89,3 @@
     force_basic_auth: yes
     status_code: 201
   when: repo_data.status == 404
-
-
-- name: Configure Gitea VirtualService
-  kubernetes.core.k8s:
-    state: present
-    template: templates/gitea-vs.yaml.j2
-  when: gitea_create_virtualservice | bool
