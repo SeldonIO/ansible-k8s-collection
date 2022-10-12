@@ -49,19 +49,27 @@
   register: web_service
 
 
-- name: "Set fact about Gitea External IP"
-  set_fact:
-    gitea_external_ip: "{{ web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+- name: "Set fact about Gitea ingress when VirtualService is not available"
+  when: not (gitea_create_virtualservice | bool)
+  block:
+    - name: "Set fact about Gitea External IP"
+      set_fact:
+        gitea_external_ip: "{{ web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
 
 
-- name: "Log external IP address"
-  ansible.builtin.debug:
-    var: gitea_external_ip
+    - name: "Log external IP address"
+      ansible.builtin.debug:
+        var: gitea_external_ip
+
+
+    - name: "Set fact about Gitea ingress URI"
+      set_fact:
+        gitea_ingress_uri: "{{ gitea_external_ip }}:{{ gitea_port }}"
 
 
 - name: "Check if {{ gitops_repo_name }} exists"
   uri:
-    url: "http://{{ gitea_external_ip }}:{{ gitea_port }}/api/v1/repos/{{ gitops_user }}/{{ gitops_repo_name }}"
+    url: "http://{{ gitea_ingress_uri }}/api/v1/repos/{{ gitops_user }}/{{ gitops_repo_name }}"
     user: "{{ gitops_user }}"
     password: "{{ gitops_password }}"
     method: GET
@@ -77,7 +85,7 @@
 
 - name: "Create {{ gitops_repo_name }} repository if it does not exist"
   uri:
-    url: "http://{{ gitea_external_ip }}:{{ gitea_port }}/api/v1/user/repos"
+    url: "http://{{ gitea_ingress_uri }}/api/v1/user/repos"
     user: "{{ gitops_user }}"
     password: "{{ gitops_password }}"
     body:
