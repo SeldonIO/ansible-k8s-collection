@@ -48,6 +48,18 @@
     namespace: gitea-system
   register: web_service
 
+- name: "Set fact about Gitea ingress when VirtualService is available"
+  when: gitea_create_virtualservice | bool
+  block:
+    - name: "Log external address"
+      ansible.builtin.debug:
+        var: external_address
+
+
+    - name: "Set fact about Gitea ingress URI"
+      set_fact:
+        gitea_ingress_uri: "{{ external_address }}/gitea"
+
 
 - name: "Set fact about Gitea ingress when VirtualService is not available"
   when: not (gitea_create_virtualservice | bool)
