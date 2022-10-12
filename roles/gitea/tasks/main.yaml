@@ -53,7 +53,7 @@
 
     - name: "Get service selector from gateway"
       set_fact:
-        gateway_selector: "{{ ingress_gateway.resources[0].metadata.selector.app }}"
+        gateway_selector: "{{ ingress_gateway.resources[0].spec.selector.app }}"
 
     - name: "Get service for gateway"
       kubernetes.core.k8s_info:
