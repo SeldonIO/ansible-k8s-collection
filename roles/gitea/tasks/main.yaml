@@ -54,7 +54,7 @@
     gitea_external_ip: "{{ web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
 
 
-- name: Debug message
+- name: "Log external IP address"
   ansible.builtin.debug:
     var: gitea_external_ip
 
