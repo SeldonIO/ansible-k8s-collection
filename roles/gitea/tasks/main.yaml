@@ -43,14 +43,38 @@
 - name: "Set fact about Gitea ingress when VirtualService is available"
   when: gitea_create_virtualservice | bool
   block:
+    - name: "Get existing ingress gateway"
+      kubernetes.core.k8s_info:
+        api_version: networking.istio.io/v1beta1
+        kind: Gateway
+        namespace: "{{ gitea_virtualservice_gateway.split('/')[0] }}"
+        name: "{{ gitea_virtualservice_gateway.split('/')[1] }}"
+      register: ingress_gateway
+
+    - name: "Get service selector from gateway"
+      set_fact:
+        gateway_selector: "{{ ingress_gateway.spec.selector.app }}"
+
+    - name: "Get service for gateway"
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Service
+        namespace: "{{ gitea_virtualservice_gateway.split('/')[0] }}"
+        label_selectors:
+          - "app = {{ gateway_selector }}"
+      register: external_service
+
+    - name: "Get IP for ingress gateway"
+      set_fact:
+        gitea_external_address: "{{ external_service.status.loadBalancer.ingress.ip }}"
+
     - name: "Log external address"
       ansible.builtin.debug:
-        var: external_address
-
+        var: gitea_external_address
 
     - name: "Set fact about Gitea ingress URI"
       set_fact:
-        gitea_ingress_uri: "{{ external_address }}/gitea"
+        gitea_ingress_uri: "{{ gitea_external_address }}/gitea"
 
 
 - name: "Set fact about Gitea ingress when VirtualService is not available"
