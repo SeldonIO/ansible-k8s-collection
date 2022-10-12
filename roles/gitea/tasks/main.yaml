@@ -40,14 +40,6 @@
   when: gitea_create_virtualservice | bool
 
 
-- name: "Get an existing Service object"
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    name: gitea-http
-    namespace: gitea-system
-  register: web_service
-
 - name: "Set fact about Gitea ingress when VirtualService is available"
   when: gitea_create_virtualservice | bool
   block:
@@ -64,6 +56,14 @@
 - name: "Set fact about Gitea ingress when VirtualService is not available"
   when: not (gitea_create_virtualservice | bool)
   block:
+    - name: "Get an existing Service object"
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Service
+        name: gitea-http
+        namespace: gitea-system
+      register: web_service
+
     - name: "Set fact about Gitea External IP"
       set_fact:
         gitea_external_ip: "{{ web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
