@@ -59,7 +59,7 @@
     var: gitea_external_ip
 
 
-- name: "Check if {{ gitops_repo_name }} exist"
+- name: "Check if {{ gitops_repo_name }} exists"
   uri:
     url: "http://{{ gitea_external_ip }}:{{ gitea_port }}/api/v1/repos/{{ gitops_user }}/{{ gitops_repo_name }}"
     user: "{{ gitops_user }}"
