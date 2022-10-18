@@ -7,7 +7,7 @@
     state: present
 
 
-- name: Install Gitea Server
+- name: "Install Gitea Server"
   kubernetes.core.helm:
     name: gitea
     release_namespace: "{{ gitea_namespace }}"
@@ -18,7 +18,7 @@
     values_files: "{{ gitea_values_files }}"
 
 
-- name: Wait for Gitea StatefulSets
+- name: "Wait for Gitea StatefulSets"
   shell: "kubectl rollout status -n {{ gitea_namespace }} statefulsets/{{ item }}"
   with_items:
     - gitea-postgresql
@@ -26,35 +26,84 @@
   when: gitea_wait_for_deployments | bool
 
 
-- name: Wait for Gitea deployments (memcached)
+- name: "Wait for Gitea deployments (memcached)"
   shell: "kubectl rollout status -n {{ gitea_namespace }} deploy/{{ item }}"
   with_items:
     - gitea-memcached
   when: gitea_wait_for_deployments | bool
 
 
-- name: Get an existing Service object
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    name: gitea-http
-    namespace: gitea-system
-  register: web_service
+- name: "Configure Gitea VirtualService"
+  kubernetes.core.k8s:
+    state: present
+    template: templates/gitea-vs.yaml.j2
+  when: gitea_create_virtualservice | bool
 
 
-- name: "Set fact about Gitea External IP"
-  set_fact:
-    gitea_external_ip: "{{ web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+- name: "Set fact about Gitea ingress when VirtualService is available"
+  when: gitea_create_virtualservice | bool
+  block:
+    - name: "Get existing ingress gateway"
+      kubernetes.core.k8s_info:
+        api_version: networking.istio.io/v1beta1
+        kind: Gateway
+        namespace: "{{ gitea_virtualservice_gateway.split('/')[0] }}"
+        name: "{{ gitea_virtualservice_gateway.split('/')[1] }}"
+      register: ingress_gateway
+
+    - name: "Get service selector from gateway"
+      set_fact:
+        gateway_selector: "{{ ingress_gateway.resources[0].spec.selector.app }}"
+
+    - name: "Get service for gateway"
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Service
+        namespace: "{{ gitea_virtualservice_gateway.split('/')[0] }}"
+        label_selectors:
+          - "app = {{ gateway_selector }}"
+      register: external_service
+
+    - name: "Get IP for ingress gateway"
+      set_fact:
+        gitea_external_address: "{{ external_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+
+    - name: "Log external address"
+      ansible.builtin.debug:
+        var: gitea_external_address
+
+    - name: "Set fact about Gitea ingress URI"
+      set_fact:
+        gitea_ingress_uri: "{{ gitea_external_address }}/gitea"
 
 
-- name: Debug message
-  ansible.builtin.debug:
-    var: gitea_external_ip
+- name: "Set fact about Gitea ingress when VirtualService is not available"
+  when: not (gitea_create_virtualservice | bool)
+  block:
+    - name: "Get an existing Service object"
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Service
+        name: gitea-http
+        namespace: gitea-system
+      register: web_service
+
+    - name: "Set fact about Gitea External IP"
+      set_fact:
+        gitea_external_ip: "{{ web_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+
+    - name: "Log external IP address"
+      ansible.builtin.debug:
+        var: gitea_external_ip
+
+    - name: "Set fact about Gitea ingress URI"
+      set_fact:
+        gitea_ingress_uri: "{{ gitea_external_ip }}:{{ gitea_port }}"
 
 
-- name: "Check if {{ gitops_repo_name }} exist"
+- name: "Check if {{ gitops_repo_name }} exists"
   uri:
-    url: "http://{{ gitea_external_ip }}:{{ gitea_port }}/api/v1/repos/{{ gitops_user }}/{{ gitops_repo_name }}"
+    url: "http://{{ gitea_ingress_uri }}/api/v1/repos/{{ gitops_user }}/{{ gitops_repo_name }}"
     user: "{{ gitops_user }}"
     password: "{{ gitops_password }}"
     method: GET
@@ -70,7 +119,7 @@
 
 - name: "Create {{ gitops_repo_name }} repository if it does not exist"
   uri:
-    url: "http://{{ gitea_external_ip }}:{{ gitea_port }}/api/v1/user/repos"
+    url: "http://{{ gitea_ingress_uri }}/api/v1/user/repos"
     user: "{{ gitops_user }}"
     password: "{{ gitops_password }}"
     body:
@@ -82,10 +131,3 @@
     force_basic_auth: yes
     status_code: 201
   when: repo_data.status == 404
-
-
-- name: Configure Gitea VirtualService
-  kubernetes.core.k8s:
-    state: present
-    template: templates/gitea-vs.yaml.j2
-  when: gitea_create_virtualservice | bool
