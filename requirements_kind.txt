@@ -1,0 +1,4 @@
+ansible==6.6.0
+ansible-core==2.13.7
+docker==6.0.1
+kubernetes==25.3.0
