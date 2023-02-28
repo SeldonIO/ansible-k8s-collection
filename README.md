@@ -3,6 +3,9 @@ Collection of Ansible roles and playbooks crafted for Seldon ecosystem
 
 > :warning: **NOTE:** This is work in progress
 
+> :warning: To configure ecosystem for Seldon Core follow instructions for [Core v1](https://github.com/SeldonIO/seldon-core/tree/master/ansible) or [Core v2](https://github.com/SeldonIO/seldon-core/blob/v2/ansible/README.md) directly.
+
+
 ## Requirements
 
 To install Ansible and its requirements:
