@@ -1,4 +1,6 @@
 ---
-metallb_version: v0.10.2
-metallb_manifest_namespace: "https://raw.githubusercontent.com/metallb/metallb/{{ metallb_version }}/manifests/namespace.yaml"
-metallb_manifest_metallb: "https://raw.githubusercontent.com/metallb/metallb/{{ metallb_version }}/manifests/metallb.yaml"
+metallb_version: v0.13.4
+metallb_manifest_metallb: "https://raw.githubusercontent.com/metallb/metallb/{{ metallb_version }}/config/manifests/metallb-native.yaml"
+
+metallb_retries: 10
+metallb_retry_delay_seconds: 1
