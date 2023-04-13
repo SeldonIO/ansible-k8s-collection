@@ -7,5 +7,5 @@
     release_namespace: "{{ elastic_opensearch_namespace }}"
     release_name: "opensearch"
     release_state: present
-    release_values: "{{ elastic_opensearch_values }}"
+    release_values: "{{ [elastic_opensearch_values, elastic_opensearch_extra_values] | combine(recursive=True) }}"
   notify: "Wait for rollout - OpenSearch Elasticsearch"
